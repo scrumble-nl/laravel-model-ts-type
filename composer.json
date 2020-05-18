@@ -1,0 +1,49 @@
+{
+  "name": "scrumble-nl/laravel-model-ts-type",
+  "type": "library",
+  "homepage": "https://github.com/scrumble-nl/laravel-model-ts-type",
+  "description": "This package makes it possible to generate TypeScript types based on your models",
+  "keywords": [
+    "command",
+    "generate",
+    "model",
+    "TypeScript",
+    "type"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Rico Clark",
+      "email": "rico@scrumble.nl"
+    },
+    {
+      "name": "Luuk de Weijer",
+      "email": "luuk@scrumble.nl"
+    }
+  ],
+  "autoload": {
+    "psr-4": {"Scrumble\\TypeGenerator\\": "src/"},
+    "classmap": [
+      "src"
+    ]
+  },
+  "autoload-dev": {
+    "classmap": [
+    ]
+  },
+  "require": {
+    "php": ">=7.3.1",
+    "laravel/framework": "^7.0"
+  },
+  "require-dev": {
+  },
+  "replace": {
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Scrumble\\TypeGenerator\\ServiceProvider"
+      ]
+    }
+  }
+}

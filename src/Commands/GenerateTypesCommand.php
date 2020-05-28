@@ -126,7 +126,6 @@ class GenerateTypesCommand extends Command
     {
         $propertyDefinition = [];
 
-        // Make separate classes
         $propertyDefinition = array_merge($propertyDefinition, $this->databaseGenerator->getPropertyDefinition($model));
         $propertyDefinition = array_merge($propertyDefinition, $this->relationGenerator->getPropertyDefinition($model));
         $propertyDefinition = array_merge($propertyDefinition, $this->attributeGenerator->getPropertyDefinition($model));

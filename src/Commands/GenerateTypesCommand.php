@@ -63,8 +63,6 @@ class GenerateTypesCommand extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
-        $this->outputDir = $this->option('outputDir') ??  config('laravel-model-ts-type.output_dir');
         $this->databaseGenerator = new DatabasePropertyGenerator();
         $this->relationGenerator = new RelationPropertyGenerator();
         $this->attributeGenerator = new AttributePropertyGenerator();
@@ -78,6 +76,8 @@ class GenerateTypesCommand extends Command
      */
     public function handle(): void
     {
+        $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
+        $this->outputDir = $this->option('outputDir') ??  config('laravel-model-ts-type.output_dir');
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {

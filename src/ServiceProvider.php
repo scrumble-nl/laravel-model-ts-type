@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace Scrumble\TypeGenerator;
+
+use Scrumble\TypeGenerator\Commands\GenerateTypesCommand;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
 class ServiceProvider extends LaravelServiceProvider
@@ -24,9 +27,7 @@ class ServiceProvider extends LaravelServiceProvider
             __DIR__ . '/config/laravel-model-ts-type.php' => config_path('laravel-model-ts-type.php'),
         ]);
 
-        $this->commands([
-
-        ]);
+        $this->commands([GenerateTypesCommand::class]);
     }
 
     /**

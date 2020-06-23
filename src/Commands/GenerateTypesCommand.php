@@ -171,7 +171,7 @@ class GenerateTypesCommand extends Command
 
         $fileContents = $this->formatContents($className, $propertyDefinition);
 
-        File::put($fullPath . '/' . $className . '.ts', $fileContents);
+        File::put($fullPath . '/' . $className . '.d.ts', $fileContents);
     }
 
     /**

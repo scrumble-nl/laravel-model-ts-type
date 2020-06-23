@@ -82,6 +82,7 @@ class GenerateTypesCommand extends Command
 
         foreach ($this->modelHits as $model) {
             $namespace = str_replace('.php', '', preg_replace('/\//', '\\', str_replace(base_path() . '/a', 'A', $model)));
+
             if (!in_array($namespace, get_declared_classes())) {
                 include($model);
             }

@@ -136,6 +136,8 @@ class GenerateTypesCommand extends Command
     }
 
     /**
+     * Remove all hidden fields from the property definition
+     * 
      * @param $model
      * @param array $propertyDefinition
      * @throws \ReflectionException

@@ -12,22 +12,22 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     /**
      * @var array
      */
-    private const MYSQL_STRING_TYPES = ['char', 'varchar', 'binary', 'varbinary', 'tinyblob', 'blob', 'mediumblob', 'longblob', 'tinytext', 'text', 'mediumtext', 'longtext', 'enum', 'set'];
+    private const STRING_TYPES = ['char', 'varchar', 'binary', 'varbinary', 'tinyblob', 'blob', 'mediumblob', 'longblob', 'tinytext', 'text', 'mediumtext', 'longtext', 'enum', 'set'];
 
     /**
      * @var array
      */
-    private const MYSQL_NUMBER_TYPES = ['bit', 'smallint', 'mediumint', 'int', 'bigint', 'decimal', 'float', 'double'];
+    private const NUMBER_TYPES = ['bit', 'smallint', 'mediumint', 'int', 'bigint', 'decimal', 'float', 'double'];
 
     /**
      * @var array
      */
-    private const MYSQL_BOOL_TYPES = ['tinyint'];
+    private const BOOL_TYPES = ['tinyint'];
 
     /**
      * @var array
      */
-    private const MYSQL_DATE_TYPES = ['date', 'time', 'datetime', 'timestamp', 'year'];
+    private const DATE_TYPES = ['date', 'time', 'datetime', 'timestamp', 'year'];
 
     /**
      * {@inheritDoc}
@@ -54,10 +54,10 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     {
         $type = 'any';
         $typesToCheck = [
-            'string' => self::MYSQL_STRING_TYPES,
-            'number' => self::MYSQL_NUMBER_TYPES,
-            'boolean' => self::MYSQL_BOOL_TYPES,
-            'string /* Date */' => self::MYSQL_DATE_TYPES
+            'string' => self::STRING_TYPES,
+            'number' => self::NUMBER_TYPES,
+            'boolean' => self::BOOL_TYPES,
+            'string /* Date */' => self::DATE_TYPES
         ];
 
         foreach ($typesToCheck as $tsType => $typesToCheck) {

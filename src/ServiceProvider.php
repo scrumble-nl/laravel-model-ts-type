@@ -25,7 +25,7 @@ class ServiceProvider extends LaravelServiceProvider
     {
         $this->publishes([
             __DIR__ . '/config/laravel-model-ts-type.php' => config_path('laravel-model-ts-type.php'),
-        ]);
+        ], 'laravel-model-ts-type');
 
         $this->commands([GenerateTypesCommand::class]);
     }

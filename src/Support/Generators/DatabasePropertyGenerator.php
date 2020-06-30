@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scrumble\TypeGenerator\Support\Generators;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
 class DatabasePropertyGenerator implements IPropertyGenerator
@@ -32,7 +33,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     /**
      * {@inheritDoc}
      */
-    public function getPropertyDefinition($model): array
+    public function getPropertyDefinition(Model $model): array
     {
         $propertyDefinition = [];
         $fields = DB::select('SHOW FIELDS FROM ' . $model->getTable());
@@ -47,7 +48,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     /**
      * Format the given mysql field
      *
-     * @param \stdClass $field
+     * @param  \stdClass $field
      * @return array
      */
     public function formatMysqlType(\stdClass $field): array

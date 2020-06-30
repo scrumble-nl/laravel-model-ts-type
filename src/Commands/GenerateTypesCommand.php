@@ -4,6 +4,7 @@ namespace Scrumble\TypeGenerator\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Exceptions\InvalidPathException;
 use Scrumble\TypeGenerator\Support\Generators\DatabasePropertyGenerator;
 use Scrumble\TypeGenerator\Support\Generators\RelationPropertyGenerator;
@@ -88,8 +89,11 @@ class GenerateTypesCommand extends Command
             }
 
             $actualModel = new $namespace;
-            $propertyDefinition = $this->createPropertyDefinition($actualModel);
-            $this->writeToTsFile($model, $propertyDefinition);
+
+            if ($actualModel instanceof Model) {
+                $propertyDefinition = $this->createPropertyDefinition($actualModel);
+                $this->writeToTsFile($model, $propertyDefinition);
+            }
         }
     }
 
@@ -107,8 +111,6 @@ class GenerateTypesCommand extends Command
                 if ($file->isDir() && !$file->isDot()) {
                     $this->getModels($file->getPathname());
                 } else if (!$file->isDot()) {
-                    // TODO: check if it is an actual model (check if it extends Model)
-
                     $this->modelHits[] = $file->getPathname();
                 }
             }
@@ -120,16 +122,18 @@ class GenerateTypesCommand extends Command
     /**
      * Create all different property definitions
      *
-     * @param  $model
+     * @param  Model $model
      * @return array
      */
-    private function createPropertyDefinition($model): array
+    private function createPropertyDefinition(Model $model): array
     {
         $propertyDefinition = [];
 
-        $propertyDefinition = array_merge($propertyDefinition, $this->databaseGenerator->getPropertyDefinition($model));
-        $propertyDefinition = array_merge($propertyDefinition, $this->relationGenerator->getPropertyDefinition($model));
-        $propertyDefinition = array_merge($propertyDefinition, $this->attributeGenerator->getPropertyDefinition($model));
+        $propertyDefinition = array_merge(
+            $this->databaseGenerator->getPropertyDefinition($model),
+            $this->relationGenerator->getPropertyDefinition($model),
+            $this->attributeGenerator->getPropertyDefinition($model)
+        );
         $this->removeHiddenFieldsFromPropertyDefinition($model, $propertyDefinition);
 
         return $propertyDefinition;
@@ -137,12 +141,12 @@ class GenerateTypesCommand extends Command
 
     /**
      * Remove all hidden fields from the property definition
-     * 
-     * @param $model
-     * @param array $propertyDefinition
+     *
+     * @param  Model $model
+     * @param  array $propertyDefinition
      * @throws \ReflectionException
      */
-    private function removeHiddenFieldsFromPropertyDefinition($model, array &$propertyDefinition)
+    private function removeHiddenFieldsFromPropertyDefinition(Model $model, array &$propertyDefinition)
     {
         $reflectionClass = new \ReflectionClass($model);
         $hiddenProperty = $reflectionClass->getProperty('hidden');
@@ -157,11 +161,11 @@ class GenerateTypesCommand extends Command
     /**
      * Write the given model to a TypeScript file
      *
-     * @param $model
-     * @param array $propertyDefinition
+     * @param  string $model
+     * @param  array $propertyDefinition
      * @return void
      */
-    private function writeToTsFile($model, array $propertyDefinition): void
+    private function writeToTsFile(string $model, array $propertyDefinition): void
     {
         $sanitizedString = preg_replace('/\/-/', '/', kebab_case(str_replace($this->modelDir . '/', '', $model)));
         $locationSegments = explode('/', $sanitizedString);

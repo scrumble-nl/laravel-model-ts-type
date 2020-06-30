@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
+use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
 class RelationPropertyGenerator implements IPropertyGenerator
@@ -11,7 +12,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
     /**
      * {@inheritDoc}
      */
-    public function getPropertyDefinition($model): array
+    public function getPropertyDefinition(Model $model): array
     {
         $propertyDefinition = [];
         $reflectionClass = new \ReflectionClass($model);
@@ -47,7 +48,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
     /**
      * Get return type based on typing or doc block
      *
-     * @param \ReflectionMethod $method
+     * @param  \ReflectionMethod $method
      * @return string
      */
     private function getReturnType(\ReflectionMethod $method): string

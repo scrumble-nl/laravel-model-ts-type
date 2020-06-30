@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
+use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
 class AttributePropertyGenerator implements IPropertyGenerator
@@ -11,7 +12,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
     /**
      * {@inheritDoc}
      */
-    public function getPropertyDefinition($model): array
+    public function getPropertyDefinition(Model $model): array
     {
         $appendFields = [];
         $propertyDefinition = [];
@@ -42,7 +43,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
     /**
      * Format the attibute name based on the camelCase method name
      *
-     * @param string $methodName
+     * @param  string $methodName
      * @return string
      */
     private function formatAttributeName(string $methodName): string
@@ -53,7 +54,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
     /**
      * Get the js type for the given method
      *
-     * @param \ReflectionMethod $method
+     * @param  \ReflectionMethod $method
      * @return string
      */
     private function getPropertyType(\ReflectionMethod $method): string

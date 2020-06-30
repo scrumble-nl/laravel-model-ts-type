@@ -21,7 +21,7 @@ class ServiceProvider extends LaravelServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publishes([
             __DIR__ . '/config/laravel-model-ts-type.php' => config_path('laravel-model-ts-type.php'),
@@ -35,7 +35,7 @@ class ServiceProvider extends LaravelServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/config/laravel-model-ts-type.php', 'laravel-model-ts-type');
     }

@@ -34,7 +34,7 @@
   "require": {
     "php": ">=7.3.1",
     "laravel/framework": "^6.0",
-    "laravel/helpers": "^1.2"
+    "laravel/helpers": "^1.1"
   },
   "require-dev": {
   },

@@ -21,6 +21,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
 
         foreach ($reflectionClass->getMethods() as $method) {
             if ($method->class === get_class($model) && $method->hasReturnType()) {
+                // TODO: check doc blocks
                 $returnType = $method->getReturnType()->getName();
 
                 if (strpos($returnType, 'Illuminate\Database\Eloquent\Relations') !== false) {

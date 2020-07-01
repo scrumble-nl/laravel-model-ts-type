@@ -94,24 +94,18 @@ class AttributePropertyGenerator implements IPropertyGenerator
      */
     public function formatPhpReturnType(string $returnType): string
     {
-        $type = 'any';
-
         switch ($returnType) {
             case 'string':
-                $type = 'string';
-                break;
+                return 'string';
             case 'int':
             case 'float':
-                $type = 'number';
-                break;
+                return 'number';
             case 'bool':
-                $type = 'boolean';
-                break;
+                return 'boolean';
             case 'array':
-                $type = 'any[]';
-                break;
+                return 'any[]';
+            default:
+                return 'any';
         }
-
-        return $type;
     }
 }

@@ -22,11 +22,10 @@ class RelationPropertyGenerator implements IPropertyGenerator
 
         foreach ($reflectionClass->getMethods() as $method) {
             if ($method->class === get_class($model)) {
-                // FIXME: if there only is docblock avaialble, make sure it works for unqualified names aswell
+                // FIXME: if there only is docblock available, make sure it works for unqualified names aswell
                 $returnType = $this->getReturnType($method);
 
                 if (strpos($returnType, 'Illuminate\Database\Eloquent\Relations') !== false) {
-                    // TODO: Should all relations always be nullable? @rico
                     $methodName = $method->getName();
                     $relatedClassSegments = explode('\\', get_class($model->$methodName()->getRelated()));
 
@@ -35,7 +34,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
                         $relatedClass = end($relatedClassSegments);
                         $propertyDefinition[snake_case($methodName)] = [
                             'operator' => in_array($methodName, $withFields) ? ':' : '?:',
-                            'value' => $relatedClass . (strpos($returnType, 'Many') !== false ? '[]' : '')
+                            'value' => $relatedClass . (strpos($returnType, 'Many') !== false ? '[]' : '') . '|null'
                         ];
                     }
                 }

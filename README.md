@@ -23,6 +23,12 @@ If you want to change the default values for `modelDir` and `outputDir` you can 
 
 NOTE: Do not forget to add the directory to your typeroots in `tsconfig.json`
 
+## Roadmap
+
+- [ ] Generate types for packagized models
+- [ ] Create command to generate type for 1 model
+- [ ] Implement unqualified name for relation doc blocks
+
 ## Contributing
 If you would like to see additions/changes to this package you are always welcome to add some code or improve it.
 

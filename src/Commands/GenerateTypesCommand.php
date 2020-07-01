@@ -78,7 +78,7 @@ class GenerateTypesCommand extends Command
     public function handle(): void
     {
         $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
-        $this->outputDir = $this->option('outputDir') ??  config('laravel-model-ts-type.output_dir');
+        $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {

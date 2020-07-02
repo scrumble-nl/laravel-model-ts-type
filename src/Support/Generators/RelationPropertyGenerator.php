@@ -57,6 +57,11 @@ class RelationPropertyGenerator implements IPropertyGenerator
         }
 
         $docComment = $method->getDocComment();
+        
+        if (false === $docComment) {
+            return '';
+        }
+        
         $matches = [];
         preg_match('/(?<=@return ).+/', $docComment, $matches);
 

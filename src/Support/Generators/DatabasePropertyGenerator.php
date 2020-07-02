@@ -35,9 +35,9 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     {
         $type = 'any';
         $typesToCheck = [
+            'boolean' => MysqlConsts::BOOL_TYPES,
             'string' => MysqlConsts::STRING_TYPES,
             'number' => MysqlConsts::NUMBER_TYPES,
-            'boolean' => MysqlConsts::BOOL_TYPES,
             'string /* Date */' => MysqlConsts::DATE_TYPES
         ];
 

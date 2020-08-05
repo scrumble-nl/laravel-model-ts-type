@@ -32,7 +32,7 @@
     ]
   },
   "require": {
-    "php": ">=7.4",
+    "php": ">=7.2.5",
     "laravel/framework": "^7.0",
     "laravel/helpers": "^1.1"
   },

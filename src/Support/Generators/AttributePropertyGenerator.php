@@ -31,7 +31,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
                 ($notAppended = preg_match('/^get[A-Z]{1}[A-z]+Attribute$/', $methodName))
             ) {
                 $propertyDefinition[$appendFields[$methodName] ?? $this->formatAttributeName($methodName)] = [
-                    'operator' => $notAppended ? '?:' : ':',
+                    'operator' => isset($notAppended) ? '?:' : ':',
                     'value' => $this->getPropertyType($method),
                 ];
             }

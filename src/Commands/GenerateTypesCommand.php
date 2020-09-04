@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Exceptions\InvalidPathException;
+use Scrumble\TypeGenerator\Support\Mutators\CastsPropertyMutator;
+use Scrumble\TypeGenerator\Support\Mutators\HiddenPropertyMutator;
 use Scrumble\TypeGenerator\Support\Generators\DatabasePropertyGenerator;
 use Scrumble\TypeGenerator\Support\Generators\RelationPropertyGenerator;
 use Scrumble\TypeGenerator\Support\Generators\AttributePropertyGenerator;
@@ -57,6 +59,16 @@ class GenerateTypesCommand extends Command
     private $attributeGenerator;
 
     /**
+     * @var CastsPropertyMutator
+     */
+    private $castsPropertyMutator;
+
+    /**
+     * @var HiddenPropertyMutator
+     */
+    private $hiddenPropertyMutator;
+
+    /**
      * Create a new command instance.
      *
      * @return void
@@ -67,6 +79,8 @@ class GenerateTypesCommand extends Command
         $this->databaseGenerator = new DatabasePropertyGenerator();
         $this->relationGenerator = new RelationPropertyGenerator();
         $this->attributeGenerator = new AttributePropertyGenerator();
+        $this->castsPropertyMutator =  new CastsPropertyMutator();
+        $this->hiddenPropertyMutator = new HiddenPropertyMutator();
     }
 
     /**
@@ -134,28 +148,11 @@ class GenerateTypesCommand extends Command
             $this->relationGenerator->getPropertyDefinition($model),
             $this->attributeGenerator->getPropertyDefinition($model)
         );
-        $this->removeHiddenFieldsFromPropertyDefinition($model, $propertyDefinition);
+        
+        $this->castsPropertyMutator->mutate($model, $propertyDefinition);
+        $this->hiddenPropertyMutator->mutate($model, $propertyDefinition);
 
         return $propertyDefinition;
-    }
-
-    /**
-     * Remove all hidden fields from the property definition
-     *
-     * @param  Model $model
-     * @param  array $propertyDefinition
-     * @throws \ReflectionException
-     */
-    private function removeHiddenFieldsFromPropertyDefinition(Model $model, array &$propertyDefinition)
-    {
-        $reflectionClass = new \ReflectionClass($model);
-        $hiddenProperty = $reflectionClass->getProperty('hidden');
-        $hiddenProperty->setAccessible(true);
-        $hiddenFields = $hiddenProperty->getValue($model);
-
-        foreach ($hiddenFields as $hiddenField) {
-            unset($propertyDefinition[$hiddenField]);
-        }
     }
 
     /**

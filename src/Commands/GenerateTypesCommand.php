@@ -96,7 +96,7 @@ class GenerateTypesCommand extends Command
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {
-            $namespace = str_replace('.php', '', preg_replace('/\//', '\\', str_replace(base_path() . '/a', 'A', $model)));
+            $namespace = format_namespace($model);
 
             if (!in_array($namespace, get_declared_classes())) {
                 include($model);
@@ -148,7 +148,7 @@ class GenerateTypesCommand extends Command
             $this->relationGenerator->getPropertyDefinition($model),
             $this->attributeGenerator->getPropertyDefinition($model)
         );
-        
+
         $this->castsPropertyMutator->mutate($model, $propertyDefinition);
         $this->hiddenPropertyMutator->mutate($model, $propertyDefinition);
 
@@ -164,9 +164,9 @@ class GenerateTypesCommand extends Command
      */
     private function writeToTsFile(string $model, array $propertyDefinition): void
     {
-        $sanitizedString = preg_replace('/\/-/', '/', kebab_case(str_replace($this->modelDir . '/', '', $model)));
+        $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($model));
         $locationSegments = explode('/', $sanitizedString);
-        $className = str_replace('.php', '', array_pop($locationSegments));
+        $className = kebab_case(str_replace('.php', '', array_pop($locationSegments)));
         $fullPath = $this->outputDir . '/' . implode('/', $locationSegments);
 
         if (!File::exists($fullPath)) {

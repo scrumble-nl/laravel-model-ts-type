@@ -21,8 +21,6 @@ Additional options:
 
 If you want to change the default values for `modelDir` and `outputDir` you can publish the config file and change it to you liking.
 
-NOTE: Do not forget to add the directory to your typeroots in `tsconfig.json`
-
 ## Roadmap
 
 - [ ] Generate types for packagized models

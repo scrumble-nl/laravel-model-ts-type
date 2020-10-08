@@ -21,8 +21,44 @@ Additional options:
 
 If you want to change the default values for `modelDir` and `outputDir` you can publish the config file and change it to you liking.
 
+### What does it do?
+
+This package this (almost) all off Laravel's magic into account. It follows these steps for generating a Type:
+1. Retrieve all fields from te database (only MySQL/MariaDB supported) and map them to default types (string, number, etc.)
+2. Add relations for the Model, they will point to the related generated Type
+3. Add the attribute getters for the Model
+4. Check the `casts` attribute
+5. Remove all fields that are in the `hidden` attribute
+
+### Example output
+
+```typescript
+type Company = {
+    id: number;
+    name: string;
+    created_at: string /* Date */ | null;
+    updated_at: string /* Date */ | null;
+    slug: string;
+    welcome_message: string | null;
+    contact_information: string | null;
+    main_color: string | null;
+    logo_src: string | null;
+    user_field: any[];
+    language: any[];
+    team_site: any[];
+    is_api_enabled: boolean;
+    kaizen_user_field: string;
+    faqs?: Faq[] | null;
+    users?: User[] | null;
+    team_properties: TeamProperty[] | null;
+    editor_images: EditorImage[] | null;
+    meta_data?: any[];
+};
+```
+
 ## Roadmap
 
+- [ ] Add tests (in progress)
 - [ ] Generate types for packagized models
 - [ ] Create command to generate type for 1 model
 - [ ] Implement unqualified name for relation doc blocks

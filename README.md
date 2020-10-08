@@ -23,8 +23,8 @@ If you want to change the default values for `modelDir` and `outputDir` you can 
 
 ### What does it do?
 
-This package this (almost) all off Laravel's magic into account. It follows these steps for generating a Type:
-1. Retrieve all fields from te database (only MySQL/MariaDB supported) and map them to default types (string, number, etc.)
+This package takes (almost) all off Laravel's magic into account. It follows these steps for generating a Type:
+1. Retrieve all fields from the database (only MySQL/MariaDB supported) and map them to default types (string, number, etc.)
 2. Add relations for the Model, they will point to the related generated Type
 3. Add the attribute getters for the Model
 4. Check the `casts` attribute

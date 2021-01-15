@@ -19,7 +19,7 @@ class GenerateTypesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'types:generate {--modelDir=} {--outputDir=}';
+    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=}';
 
     /**
      * The console command description.
@@ -42,6 +42,11 @@ class GenerateTypesCommand extends Command
      * @var string
      */
     private $outputDir;
+
+    /**
+     * @var string
+     */
+    private $namespace;
 
     /**
      * @var DatabasePropertyGenerator
@@ -92,6 +97,7 @@ class GenerateTypesCommand extends Command
     public function handle(): void
     {
         $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
+        $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->getModels($this->modelDir);
 
@@ -164,18 +170,22 @@ class GenerateTypesCommand extends Command
      */
     private function writeToTsFile(string $model, array $propertyDefinition): void
     {
-        $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($model));
-        $locationSegments = explode('/', $sanitizedString);
-        $className = kebab_case(str_replace('.php', '', array_pop($locationSegments)));
-        $fullPath = $this->outputDir . '/' . implode('/', $locationSegments);
+        $indent = $this->namespace ? "\t" : "";
 
-        if (!File::exists($fullPath)) {
-            File::makeDirectory($fullPath, 0755, true);
+        if ($this->namespace) {
+            $baseString = 'declare namespace ' . $this->namespace . ' {' . PHP_EOL;
+        }
+        $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
+
+        foreach ($propertyDefinition as $key => $value) {
+            $baseString .= $indent . "\t" . $key . $value['operator'] . ' ' . $value['value'] . PHP_EOL;
         }
 
-        $fileContents = $this->formatContents($className, $propertyDefinition);
+        if ($this->namespace) {
+            $baseString .= $indent . '}' . PHP_EOL;
+        }
 
-        File::put($fullPath . '/' . $className . '.d.ts', $fileContents);
+        return $baseString . '};';
     }
 
     /**

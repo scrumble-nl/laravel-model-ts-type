@@ -170,6 +170,29 @@ class GenerateTypesCommand extends Command
      */
     private function writeToTsFile(string $model, array $propertyDefinition): void
     {
+        $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($model));
+        $locationSegments = explode('/', $sanitizedString);
+        $className = kebab_case(str_replace('.php', '', array_pop($locationSegments)));
+        $fullPath = $this->outputDir . '/' . implode('/', $locationSegments);
+
+        if (!File::exists($fullPath)) {
+            File::makeDirectory($fullPath, 0755, true);
+        }
+
+        $fileContents = $this->formatContents($className, $propertyDefinition);
+
+        File::put($fullPath . '/' . $className . '.d.ts', $fileContents);
+    }
+
+    /**
+     * Format the contents for the TypeScript file
+     *
+     * @param  string $className
+     * @param  array $propertyDefinition
+     * @return string
+     */
+    private function formatContents(string $className, array $propertyDefinition)
+    {
         $indent = $this->namespace ? "\t" : "";
 
         if ($this->namespace) {
@@ -183,24 +206,6 @@ class GenerateTypesCommand extends Command
 
         if ($this->namespace) {
             $baseString .= $indent . '}' . PHP_EOL;
-        }
-
-        return $baseString . '};';
-    }
-
-    /**
-     * Format the contents for the TypeScript file
-     *
-     * @param  string $className
-     * @param  array $propertyDefinition
-     * @return string
-     */
-    private function formatContents(string $className, array $propertyDefinition)
-    {
-        $baseString = 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
-
-        foreach ($propertyDefinition as $key => $value) {
-            $baseString .= "\t" . $key . $value['operator'] . ' ' . $value['value'] . PHP_EOL;
         }
 
         return $baseString . '};';

@@ -20,7 +20,7 @@ Additional options:
 | `outputDir`       | `resources/js/models`                  | The root directory for outputting the `.d.ts` files             |
 | `noKebabCase`       | `false`                  | Whether the file name should be formatted to kebab case             |
 
-If you want to change the default values for `modelDir` and `outputDir` you can publish the config file and change it to you liking.
+If you want to change the default values you can publish the config file and change it to you liking.
 
 ### What does it do?
 

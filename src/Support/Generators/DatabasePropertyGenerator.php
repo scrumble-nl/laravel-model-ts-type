@@ -17,7 +17,8 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     {
         $propertyDefinition = [];
         $table = $model->getTable();
-        $fields = DB::select("SHOW FIELDS FROM `$table`");
+        $connection = $model->getConnection()->getName();
+        $fields = DB::connection($connection)->select("SHOW FIELDS FROM `$table`");
 
         foreach ($fields as $field) {
             $propertyDefinition[$field->Field] = $this->formatMysqlType($field);

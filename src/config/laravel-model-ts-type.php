@@ -15,4 +15,9 @@ return [
      * The namespace of the generated Types
      */
     'namespace' => false,
+  
+    /*
+     * Whether the file name should be formatted to kebab case
+     */
+    'noKebabCase' => false,
 ];

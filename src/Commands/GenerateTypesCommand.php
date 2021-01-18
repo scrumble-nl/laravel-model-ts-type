@@ -201,6 +201,7 @@ class GenerateTypesCommand extends Command
     private function formatContents(string $className, array $propertyDefinition)
     {
         $indent = $this->namespace ? "\t" : "";
+        $baseString = '';
 
         if ($this->namespace) {
             $baseString = 'declare namespace ' . $this->namespace . ' {' . PHP_EOL;

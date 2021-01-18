@@ -19,7 +19,7 @@ class GenerateTypesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'types:generate {--modelDir=} {--outputDir=}';
+    protected $signature = 'types:generate {--modelDir=} {--outputDir=} {--noKebabCase}';
 
     /**
      * The console command description.
@@ -42,6 +42,11 @@ class GenerateTypesCommand extends Command
      * @var string
      */
     private $outputDir;
+
+    /**
+     * @var boolean
+     */
+    private $useKebabCase;
 
     /**
      * @var DatabasePropertyGenerator
@@ -93,6 +98,7 @@ class GenerateTypesCommand extends Command
     {
         $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
+        $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {
@@ -166,7 +172,8 @@ class GenerateTypesCommand extends Command
     {
         $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($model));
         $locationSegments = explode('/', $sanitizedString);
-        $className = kebab_case(str_replace('.php', '', array_pop($locationSegments)));
+        $modelName = str_replace('.php', '', array_pop($locationSegments));
+        $className = $this->useKebabCase ? kebab_case($modelName) : $modelName;
         $fullPath = $this->outputDir . '/' . implode('/', $locationSegments);
 
         if (!File::exists($fullPath)) {

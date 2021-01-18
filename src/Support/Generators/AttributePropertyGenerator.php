@@ -64,6 +64,10 @@ class AttributePropertyGenerator implements IPropertyGenerator
         }
 
         $docComment = $method->getDocComment();
+        if (!$docComment) {
+            return 'any';
+        }
+        
         $matches = [];
         preg_match('/(?<=@return ).+/', $docComment, $matches);
 

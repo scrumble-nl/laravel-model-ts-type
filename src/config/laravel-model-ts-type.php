@@ -14,5 +14,5 @@ return [
     /*
      * The namespace of the generated Types
      */
-    'namespace' => '',
+    'namespace' => false,
 ];

@@ -18,6 +18,7 @@ Additional options:
 |--------------|:----------------------------------------------------------------------------------------:|:-------------------------------------|
 | `modelDir`      | `app/Models`                    | The root directory where the package can find all Laravel models          |
 | `outputDir`       | `resources/js/models`                  | The root directory for outputting the `.d.ts` files             |
+| `namespace`       | `false`                  | The namespace of the generated Types. Use `false` if you don't prefer to have one             |
 | `noKebabCase`       | `false`                  | Whether the file name should be formatted to kebab case             |
 
 If you want to change the default values you can publish the config file and change it to you liking.

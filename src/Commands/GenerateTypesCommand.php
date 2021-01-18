@@ -19,7 +19,7 @@ class GenerateTypesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'types:generate {--modelDir=} {--outputDir=} {--noKebabCase}';
+    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase}';
 
     /**
      * The console command description.
@@ -43,6 +43,11 @@ class GenerateTypesCommand extends Command
      */
     private $outputDir;
 
+    /**
+     * @var string
+     */
+    private $namespace;
+  
     /**
      * @var boolean
      */
@@ -97,6 +102,7 @@ class GenerateTypesCommand extends Command
     public function handle(): void
     {
         $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
+        $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
         $this->getModels($this->modelDir);
@@ -194,10 +200,19 @@ class GenerateTypesCommand extends Command
      */
     private function formatContents(string $className, array $propertyDefinition)
     {
-        $baseString = 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
+        $indent = $this->namespace ? "\t" : "";
+
+        if ($this->namespace) {
+            $baseString = 'declare namespace ' . $this->namespace . ' {' . PHP_EOL;
+        }
+        $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
 
         foreach ($propertyDefinition as $key => $value) {
-            $baseString .= "\t" . $key . $value['operator'] . ' ' . $value['value'] . PHP_EOL;
+            $baseString .= $indent . "\t" . $key . $value['operator'] . ' ' . $value['value'] . PHP_EOL;
+        }
+
+        if ($this->namespace) {
+            $baseString .= $indent . '}' . PHP_EOL;
         }
 
         return $baseString . '};';

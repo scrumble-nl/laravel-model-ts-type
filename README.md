@@ -18,6 +18,7 @@ Additional options:
 |--------------|:----------------------------------------------------------------------------------------:|:-------------------------------------|
 | `modelDir`      | `app/Models`                    | The root directory where the package can find all Laravel models          |
 | `outputDir`       | `resources/js/models`                  | The root directory for outputting the `.d.ts` files             |
+| `noKebabCase`       | `false`                  | Whether the file name should be formatted to kebab case             |
 
 If you want to change the default values for `modelDir` and `outputDir` you can publish the config file and change it to you liking.
 

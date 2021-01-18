@@ -10,4 +10,9 @@ return [
      * The root directory for the type output
      */
     'output_dir' => base_path('resources/js/models'),
+
+    /*
+     * The namespace of the generated Types
+     */
+    'namespace' => '',
 ];

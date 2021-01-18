@@ -12,7 +12,7 @@ return [
     'output_dir' => base_path('resources/js/models'),
 
     /*
-     * Whether the file name should be formatted to kebab case.
+     * Whether the file name should be formatted to kebab case
      */
     'noKebabCase' => false,
 ];

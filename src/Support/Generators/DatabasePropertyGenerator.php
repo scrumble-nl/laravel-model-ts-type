@@ -101,7 +101,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
             'operator' => ':',
             'value' =>
                 $type .
-                ('YES' === $field['isNullable'] ? ' | null' : '') .
+                ($field['isNullable'] ? ' | null' : '') .
                 ('any' === $type ? ' // NOT FOUND' : ''),
         ];
     }

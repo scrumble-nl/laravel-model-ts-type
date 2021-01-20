@@ -39,11 +39,11 @@ class DatabasePropertyGenerator implements IPropertyGenerator
             case 'pgsql':
                 $fields = array_map(function ($field) {
                     return [
-                        'name' => $field->name,
-                        'type' => $field->type,
+                        'name' => $field->column_name,
+                        'type' => $field->data_type,
                         'isNullable' => $field->is_nullable === 'YES',
                     ];
-                }, $connection->select("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = `$table`"));
+                }, $connection->select("SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = '$table'"));
                 break;
 
             case 'sqlite':

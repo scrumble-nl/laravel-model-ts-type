@@ -47,7 +47,7 @@ class GenerateTypesCommand extends Command
      * @var string
      */
     private $namespace;
-  
+
     /**
      * @var boolean
      */
@@ -89,7 +89,7 @@ class GenerateTypesCommand extends Command
         $this->databaseGenerator = new DatabasePropertyGenerator();
         $this->relationGenerator = new RelationPropertyGenerator();
         $this->attributeGenerator = new AttributePropertyGenerator();
-        $this->castsPropertyMutator =  new CastsPropertyMutator();
+        $this->castsPropertyMutator = new CastsPropertyMutator();
         $this->hiddenPropertyMutator = new HiddenPropertyMutator();
     }
 
@@ -114,6 +114,12 @@ class GenerateTypesCommand extends Command
                 include($model);
             }
 
+            $reflectionClass = new \ReflectionClass($namespace);
+
+            if ($reflectionClass->isAbstract()) {
+                continue;
+            }
+
             $actualModel = new $namespace;
 
             if ($actualModel instanceof Model) {
@@ -126,7 +132,7 @@ class GenerateTypesCommand extends Command
     /**
      * Recursively get all models from the directory path
      *
-     * @param  string $directoryPath
+     * @param string $directoryPath
      * @return void
      * @throws InvalidPathException
      */
@@ -136,8 +142,10 @@ class GenerateTypesCommand extends Command
             foreach (new \DirectoryIterator($directoryPath) as $file) {
                 if ($file->isDir() && !$file->isDot()) {
                     $this->getModels($file->getPathname());
-                } else if (!$file->isDot()) {
-                    $this->modelHits[] = $file->getPathname();
+                } else {
+                    if (!$file->isDot()) {
+                        $this->modelHits[] = $file->getPathname();
+                    }
                 }
             }
         } catch (\UnexpectedValueException $exception) {
@@ -148,7 +156,7 @@ class GenerateTypesCommand extends Command
     /**
      * Create all different property definitions
      *
-     * @param  Model $model
+     * @param Model $model
      * @return array
      */
     private function createPropertyDefinition(Model $model): array
@@ -170,8 +178,8 @@ class GenerateTypesCommand extends Command
     /**
      * Write the given model to a TypeScript file
      *
-     * @param  string $model
-     * @param  array $propertyDefinition
+     * @param string $model
+     * @param array $propertyDefinition
      * @return void
      */
     private function writeToTsFile(string $model, array $propertyDefinition): void
@@ -194,8 +202,8 @@ class GenerateTypesCommand extends Command
     /**
      * Format the contents for the TypeScript file
      *
-     * @param  string $className
-     * @param  array $propertyDefinition
+     * @param string $className
+     * @param array $propertyDefinition
      * @return string
      */
     private function formatContents(string $className, array $propertyDefinition)

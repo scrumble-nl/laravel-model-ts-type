@@ -28,7 +28,7 @@ if (!function_exists('format_namespace')) {
         $namespace = preg_replace('/\//', '\\', $namespace);
         $namespace = str_replace('.php', '', $namespace);
         $namespace = 'A' . substr($namespace, 2);
-        
+
         return $namespace;
     }
 }

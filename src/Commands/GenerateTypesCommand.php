@@ -142,10 +142,8 @@ class GenerateTypesCommand extends Command
             foreach (new \DirectoryIterator($directoryPath) as $file) {
                 if ($file->isDir() && !$file->isDot()) {
                     $this->getModels($file->getPathname());
-                } else {
-                    if (!$file->isDot()) {
-                        $this->modelHits[] = $file->getPathname();
-                    }
+                } else if (!$file->isDot()) {
+                    $this->modelHits[] = $file->getPathname();
                 }
             }
         } catch (\UnexpectedValueException $exception) {

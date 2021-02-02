@@ -206,7 +206,7 @@ class GenerateTypesCommand extends Command
      */
     private function formatContents(string $className, array $propertyDefinition)
     {
-        $indent = $this->namespace ? "\t" : "";
+        $indent = $this->namespace ? "    " : "";
         $baseString = '';
 
         if ($this->namespace) {
@@ -215,13 +215,13 @@ class GenerateTypesCommand extends Command
         $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
 
         foreach ($propertyDefinition as $key => $value) {
-            $baseString .= $indent . "\t" . $key . $value['operator'] . ' ' . $value['value'] . PHP_EOL;
+            $baseString .= $indent . "    " . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
         }
 
         if ($this->namespace) {
             $baseString .= $indent . '}' . PHP_EOL;
         }
 
-        return $baseString . '};';
+        return $baseString . '};' . PHP_EOL;
     }
 }

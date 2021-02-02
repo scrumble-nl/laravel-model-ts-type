@@ -32,7 +32,9 @@ class RelationPropertyGenerator implements IPropertyGenerator
                     // TODO: In later stage fix relations for packagized models
                     if ('App' === $relatedClassSegments[0]) {
                         $relatedClass = end($relatedClassSegments);
-                        $propertyDefinition[snake_case($methodName)] = [
+                        $snakeCase = $reflectionClass->getProperty('snakeAttributes')->getValue($model);
+                        
+                        $propertyDefinition[$snakeCase ? snake_case($methodName) : $methodName] = [
                             'operator' => in_array($methodName, $withFields) ? ':' : '?:',
                             'value' => $relatedClass . (strpos($returnType, 'Many') !== false ? '[]' : '') . '|null'
                         ];
@@ -57,11 +59,11 @@ class RelationPropertyGenerator implements IPropertyGenerator
         }
 
         $docComment = $method->getDocComment();
-        
+
         if (false === $docComment) {
             return '';
         }
-        
+
         $matches = [];
         preg_match('/(?<=@return ).+/', $docComment, $matches);
 

@@ -24,6 +24,10 @@ if (!function_exists('format_namespace')) {
      */
     function format_namespace(string $path): string
     {
+        if (!starts_with($path, '/')) {
+            $path = '/' . $path;
+        }
+
         $namespace = str_replace(base_path(), '', $path);
         $namespace = preg_replace('/\//', '\\', $namespace);
         $namespace = str_replace('.php', '', $namespace);

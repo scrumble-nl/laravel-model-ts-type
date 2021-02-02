@@ -36,7 +36,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
                         
                         $propertyDefinition[$snakeCase ? snake_case($methodName) : $methodName] = [
                             'operator' => in_array($methodName, $withFields) ? ':' : '?:',
-                            'value' => $relatedClass . (strpos($returnType, 'Many') !== false ? '[]' : '') . '|null'
+                            'value' => $relatedClass . (strpos($returnType, 'Many') !== false ? '[]' : '') . ' | null'
                         ];
                     }
                 }

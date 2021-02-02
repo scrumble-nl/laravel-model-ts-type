@@ -60,14 +60,14 @@ class AttributePropertyGenerator implements IPropertyGenerator
     private function getPropertyType(\ReflectionMethod $method): string
     {
         if (null !== ($returnType = $method->getReturnType())) {
-            return $this->formatPhpReturnType($returnType->getName()) . ($returnType->allowsNull() ? '|null' : '');
+            return $this->formatPhpReturnType($returnType->getName()) . ($returnType->allowsNull() ? ' | null' : '');
         }
 
         $docComment = $method->getDocComment();
         if (!$docComment) {
             return 'any';
         }
-        
+
         $matches = [];
         preg_match('/(?<=@return ).+/', $docComment, $matches);
 
@@ -84,7 +84,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
                 $jsTypes = array_unique($jsTypes);
             }
 
-            return implode('|', $jsTypes) . (in_array('null', $types) ? '|null' : '');
+            return implode(' | ', $jsTypes) . (in_array('null', $types) ? ' | null' : '');
         }
 
         return 'any';

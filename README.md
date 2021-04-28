@@ -6,7 +6,7 @@ Generate TypeScript types based on your models.
 
 Install the package using composer:
 ```
-composer require scrumble-nl/laravel-model-ts-type
+composer require --dev scrumble-nl/laravel-model-ts-type
 ```
 ### Generating types
 ```

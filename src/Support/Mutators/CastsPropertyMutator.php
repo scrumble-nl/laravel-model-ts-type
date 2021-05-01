@@ -4,11 +4,22 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Mutators;
 
+use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyMutator;
 
 class CastsPropertyMutator implements IPropertyMutator
 {
+    /**
+     * @var Command
+     */
+    private $command;
+
+    public function __construct(Command $command)
+    {
+        $this->command = $command;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -20,6 +31,12 @@ class CastsPropertyMutator implements IPropertyMutator
         $castFields = $castsProperty->getValue($model);
 
         foreach ($castFields as $key => $castValue) {
+            if (isset($propertyDefinition[$key]) === false) {
+                $this->command->warn(
+                    sprintf('Skipped property: Undefined property "%s" found in casts of model %s.', $key, get_class($model))
+                );
+                continue;
+            }
             $propertyDefinition[$key]['value'] = $this->formatCastValue($castValue);
         }
     }

@@ -19,7 +19,7 @@ class GenerateTypesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'types:generate {--modelDir=} {--outputDir=}';
+    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase}';
 
     /**
      * The console command description.
@@ -42,6 +42,16 @@ class GenerateTypesCommand extends Command
      * @var string
      */
     private $outputDir;
+
+    /**
+     * @var string
+     */
+    private $namespace;
+
+    /**
+     * @var boolean
+     */
+    private $useKebabCase;
 
     /**
      * @var DatabasePropertyGenerator
@@ -79,7 +89,7 @@ class GenerateTypesCommand extends Command
         $this->databaseGenerator = new DatabasePropertyGenerator();
         $this->relationGenerator = new RelationPropertyGenerator();
         $this->attributeGenerator = new AttributePropertyGenerator();
-        $this->castsPropertyMutator =  new CastsPropertyMutator();
+        $this->castsPropertyMutator = new CastsPropertyMutator($this);
         $this->hiddenPropertyMutator = new HiddenPropertyMutator();
     }
 
@@ -92,7 +102,9 @@ class GenerateTypesCommand extends Command
     public function handle(): void
     {
         $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
+        $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
+        $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {
@@ -100,6 +112,12 @@ class GenerateTypesCommand extends Command
 
             if (!in_array($namespace, get_declared_classes())) {
                 include($model);
+            }
+
+            $reflectionClass = new \ReflectionClass($namespace);
+
+            if ($reflectionClass->isAbstract()) {
+                continue;
             }
 
             $actualModel = new $namespace;
@@ -114,7 +132,7 @@ class GenerateTypesCommand extends Command
     /**
      * Recursively get all models from the directory path
      *
-     * @param  string $directoryPath
+     * @param string $directoryPath
      * @return void
      * @throws InvalidPathException
      */
@@ -136,7 +154,7 @@ class GenerateTypesCommand extends Command
     /**
      * Create all different property definitions
      *
-     * @param  Model $model
+     * @param Model $model
      * @return array
      */
     private function createPropertyDefinition(Model $model): array
@@ -158,15 +176,16 @@ class GenerateTypesCommand extends Command
     /**
      * Write the given model to a TypeScript file
      *
-     * @param  string $model
-     * @param  array $propertyDefinition
+     * @param string $model
+     * @param array $propertyDefinition
      * @return void
      */
     private function writeToTsFile(string $model, array $propertyDefinition): void
     {
         $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($model));
         $locationSegments = explode('/', $sanitizedString);
-        $className = kebab_case(str_replace('.php', '', array_pop($locationSegments)));
+        $modelName = str_replace('.php', '', array_pop($locationSegments));
+        $className = $this->useKebabCase ? kebab_case($modelName) : $modelName;
         $fullPath = $this->outputDir . '/' . implode('/', $locationSegments);
 
         if (!File::exists($fullPath)) {
@@ -181,18 +200,28 @@ class GenerateTypesCommand extends Command
     /**
      * Format the contents for the TypeScript file
      *
-     * @param  string $className
-     * @param  array $propertyDefinition
+     * @param string $className
+     * @param array $propertyDefinition
      * @return string
      */
     private function formatContents(string $className, array $propertyDefinition)
     {
-        $baseString = 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
+        $indent = $this->namespace ? "    " : "";
+        $baseString = '';
+
+        if ($this->namespace) {
+            $baseString = 'declare namespace ' . $this->namespace . ' {' . PHP_EOL;
+        }
+        $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
 
         foreach ($propertyDefinition as $key => $value) {
-            $baseString .= "\t" . $key . $value['operator'] . ' ' . $value['value'] . PHP_EOL;
+            $baseString .= $indent . "    " . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
         }
 
-        return $baseString . '};';
+        if ($this->namespace) {
+            $baseString .= $indent . '}' . PHP_EOL;
+        }
+
+        return $baseString . '};' . PHP_EOL;
     }
 }

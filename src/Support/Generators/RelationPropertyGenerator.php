@@ -32,9 +32,11 @@ class RelationPropertyGenerator implements IPropertyGenerator
                     // TODO: In later stage fix relations for packagized models
                     if ('App' === $relatedClassSegments[0]) {
                         $relatedClass = end($relatedClassSegments);
-                        $propertyDefinition[snake_case($methodName)] = [
+                        $snakeCase = $reflectionClass->getProperty('snakeAttributes')->getValue($model);
+
+                        $propertyDefinition[$snakeCase ? snake_case($methodName) : $methodName] = [
                             'operator' => in_array($methodName, $withFields) ? ':' : '?:',
-                            'value' => $relatedClass . (strpos($returnType, 'Many') !== false ? '[]' : '') . '|null'
+                            'value' => $this->formatValue($relatedClass, $returnType)
                         ];
                     }
                 }
@@ -57,11 +59,11 @@ class RelationPropertyGenerator implements IPropertyGenerator
         }
 
         $docComment = $method->getDocComment();
-        
+
         if (false === $docComment) {
             return '';
         }
-        
+
         $matches = [];
         preg_match('/(?<=@return ).+/', $docComment, $matches);
 
@@ -70,5 +72,21 @@ class RelationPropertyGenerator implements IPropertyGenerator
         }
 
         return '';
+    }
+
+    /**
+     * Format the value used for the types
+     *
+     * @param string $relatedClass
+     * @param string $returnType
+     * @return string
+     */
+    private function formatValue(string $relatedClass, string $returnType): string
+    {
+        if (str_contains($returnType, 'Morph')) {
+            $relatedClass = 'any';
+        }
+
+        return $relatedClass . (str_contains($returnType, 'Many') ? '[]' : '') . ' | null';
     }
 }

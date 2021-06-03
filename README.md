@@ -23,10 +23,11 @@ Additional options:
 
 If you want to change the default values you can publish the config file and change it to you liking.
 
+NOTE: Do not forget to add the directory to your typeroots in `tsconfig.json`
 ### What does it do?
 
-This package takes (almost) all of Laravel's magic into account. It follows these steps for generating a Type:
-1. Retrieve all fields from the database (only MySQL/MariaDB supported) and map them to default types (string, number, etc.)
+This package takes (almost) all off Laravel's magic into account. It follows these steps for generating a Type:
+1. Retrieve all fields from te database (only MySQL/MariaDB supported) and map them to default types (string, number, etc.)
 2. Add relations for the Model, they will point to the related generated Type
 3. Add the attribute getters for the Model
 4. Check the `casts` attribute

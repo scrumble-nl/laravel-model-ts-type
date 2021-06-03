@@ -89,7 +89,7 @@ class GenerateTypesCommand extends Command
         $this->databaseGenerator = new DatabasePropertyGenerator();
         $this->relationGenerator = new RelationPropertyGenerator();
         $this->attributeGenerator = new AttributePropertyGenerator();
-        $this->castsPropertyMutator = new CastsPropertyMutator();
+        $this->castsPropertyMutator = new CastsPropertyMutator($this);
         $this->hiddenPropertyMutator = new HiddenPropertyMutator();
     }
 

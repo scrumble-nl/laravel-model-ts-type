@@ -116,7 +116,7 @@ class GenerateTypesCommand extends Command
 
             $reflectionClass = new \ReflectionClass($namespace);
 
-            if ($reflectionClass->isAbstract()) {
+            if ($reflectionClass->isAbstract() || array_key_exists('GENERATE_TYPE', $reflectionClass->getConstants())) {
                 continue;
             }
 

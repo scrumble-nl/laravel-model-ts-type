@@ -31,7 +31,8 @@ if (!function_exists('format_namespace')) {
         $namespace = str_replace(base_path(), '', $path);
         $namespace = preg_replace('/\//', '\\', $namespace);
         $namespace = str_replace('.php', '', $namespace);
-        $namespace = 'A' . substr($namespace, 2);
+
+        $namespace = Str::ucfirst(substr($namespace, 2));
 
         return $namespace;
     }

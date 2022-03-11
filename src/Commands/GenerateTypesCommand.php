@@ -108,23 +108,23 @@ class GenerateTypesCommand extends Command
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {
-            $namespace = format_namespace($model);
+            $fullyQualifiedName = format_namespace($model);
 
-            if (!in_array($namespace, get_declared_classes())) {
+            if (!in_array($fullyQualifiedName, get_declared_classes())) {
                 include($model);
             }
 
-            $reflectionClass = new \ReflectionClass($namespace);
+            $reflectionClass = new \ReflectionClass($fullyQualifiedName);
 
             if ($reflectionClass->isAbstract()) {
                 continue;
             }
 
-            $actualModel = new $namespace;
+			$actualModel = new $fullyQualifiedName;
 
             if ($actualModel instanceof Model) {
                 $propertyDefinition = $this->createPropertyDefinition($actualModel);
-                $this->writeToTsFile($model, $propertyDefinition);
+                $this->writeToTsFile($model, $propertyDefinition, $reflectionClass->getNamespaceName());
             }
         }
     }
@@ -180,7 +180,7 @@ class GenerateTypesCommand extends Command
      * @param array $propertyDefinition
      * @return void
      */
-    private function writeToTsFile(string $model, array $propertyDefinition): void
+    private function writeToTsFile(string $model, array $propertyDefinition, ?string $modelNamespace): void
     {
         $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($model));
         $locationSegments = explode('/', $sanitizedString);
@@ -192,7 +192,9 @@ class GenerateTypesCommand extends Command
             File::makeDirectory($fullPath, 0755, true);
         }
 
-        $fileContents = $this->formatContents($className, $propertyDefinition);
+		$transformedNamespace = str_replace("\\", '.', $modelNamespace);
+
+        $fileContents = $this->formatContents($className, $propertyDefinition, $transformedNamespace);
 
         File::put($fullPath . '/' . $className . '.d.ts', $fileContents);
     }
@@ -204,13 +206,13 @@ class GenerateTypesCommand extends Command
      * @param array $propertyDefinition
      * @return string
      */
-    private function formatContents(string $className, array $propertyDefinition)
+    private function formatContents(string $className, array $propertyDefinition, ?string $namespace)
     {
         $indent = $this->namespace ? "    " : "";
         $baseString = '';
 
         if ($this->namespace) {
-            $baseString = 'declare namespace ' . $this->namespace . ' {' . PHP_EOL;
+            $baseString = 'declare namespace ' . $namespace . ' {' . PHP_EOL;
         }
         $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
 
@@ -222,6 +224,6 @@ class GenerateTypesCommand extends Command
             $baseString .= $indent . '}' . PHP_EOL;
         }
 
-        return $baseString . '};' . PHP_EOL;
+        return $baseString . '}' . PHP_EOL;
     }
 }

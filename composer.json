@@ -52,7 +52,10 @@
     "laravel": {
       "providers": [
         "Scrumble\\TypeGenerator\\ServiceProvider"
-      ]
+      ],
+      "aliases": {
+        "FormatNamespace": "Scrumble\\TypeGenerator\\Facades\\FormatNamespace"
+      }
     }
   },
   "scripts": {

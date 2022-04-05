@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Console\Commands;
 
+use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use function config;
 use function kebab_case;
 use ReflectionException;
@@ -116,7 +117,7 @@ class GenerateTypesCommand extends Command
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {
-            $fullyQualifiedName = format_namespace($model);
+            $fullyQualifiedName = FormatNamespace::get($model);
 
             if (!in_array($fullyQualifiedName, get_declared_classes())) {
                 include $model;

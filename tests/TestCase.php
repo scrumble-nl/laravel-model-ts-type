@@ -18,8 +18,6 @@ class TestCase extends Orchestra
     use DatabaseMigrations;
 
     /**
-     * Setting up the test environment.
-     *
      * @return void
      */
     public function setUp(): void
@@ -30,8 +28,6 @@ class TestCase extends Orchestra
     }
 
     /**
-     * Register the package providers.
-     *
      * @param $app
      * @return string[]
      */
@@ -43,8 +39,6 @@ class TestCase extends Orchestra
     }
 
     /**
-     * Define environment setup.
-     *
      * @param  Application $app
      * @return void
      */
@@ -60,8 +54,6 @@ class TestCase extends Orchestra
     }
 
     /**
-     * Setup the database for testing.
-     *
      * @param  Application $app
      * @return void
      */

@@ -12,15 +12,11 @@ use Tests\TestCase;
 class GeneratesTypesCommandTest extends TestCase
 {
     /**
-     * The model list to test.
-     *
      * @var string[]
      */
     protected $modelList = ['bar', 'foo'];
 
     /**
-     * Test for the general generate command.
-     *
      * @return void
      */
     public function test_command_absolute_path()

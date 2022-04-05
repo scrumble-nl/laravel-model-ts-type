@@ -43,7 +43,8 @@
     "laravel/helpers": "^1.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^9.5",
+    "orchestra/testbench": "^7.3"
   },
   "replace": {
   },
@@ -53,5 +54,10 @@
         "Scrumble\\TypeGenerator\\ServiceProvider"
       ]
     }
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "@php ./vendor/bin/testbench package:discover --ansi"
+    ]
   }
 }

@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bar extends Model
 {
+    public $timestamps = false;
+
     protected $casts = [
-        'today' => 'date',
+        'today'     => 'date',
         'yesterday' => 'datetime',
-        'theme' => 'object',
+        'theme'     => 'object',
     ];
 }

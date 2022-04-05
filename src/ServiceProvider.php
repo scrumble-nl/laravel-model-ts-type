@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator;
 
-use Scrumble\TypeGenerator\Commands\GenerateTypesCommand;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use Scrumble\TypeGenerator\Console\Commands\GenerateTypesCommand;
 
 class ServiceProvider extends LaravelServiceProvider
 {

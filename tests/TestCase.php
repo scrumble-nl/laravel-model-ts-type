@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests;
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Database\Schema\Blueprint;
 use Scrumble\TypeGenerator\ServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
+/**
+ * @internal
+ */
 class TestCase extends Orchestra
 {
     use DatabaseMigrations;
@@ -40,7 +45,7 @@ class TestCase extends Orchestra
     /**
      * Define environment setup.
      *
-     * @param  Application  $app
+     * @param  Application $app
      * @return void
      */
     protected function defineEnvironment($app)
@@ -48,16 +53,16 @@ class TestCase extends Orchestra
         // Setup default database to use sqlite :memory:
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 
     /**
      * Setup the database for testing.
      *
-     * @param  Application  $app
+     * @param  Application $app
      * @return void
      */
     protected function setUpDatabase(Application $app)

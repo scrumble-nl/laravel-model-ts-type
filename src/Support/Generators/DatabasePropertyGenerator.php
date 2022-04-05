@@ -31,9 +31,10 @@ class DatabasePropertyGenerator implements IPropertyGenerator
                     return [
                         'name' => $field->Field,
                         'type' => $field->Type,
-                        'isNullable' => $field->Null === 'YES',
+                        'isNullable' => 'YES' === $field->Null,
                     ];
-                }, $connection->select("SHOW FIELDS FROM `$table`"));
+                }, $connection->select("SHOW FIELDS FROM `{$table}`"));
+
                 break;
 
             case 'pgsql':
@@ -41,9 +42,10 @@ class DatabasePropertyGenerator implements IPropertyGenerator
                     return [
                         'name' => $field->column_name,
                         'type' => $field->data_type,
-                        'isNullable' => $field->is_nullable === 'YES',
+                        'isNullable' => 'YES' === $field->is_nullable,
                     ];
-                }, $connection->select("SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = '$table'"));
+                }, $connection->select("SELECT column_name, data_type, is_nullable FROM information_schema.columns WHERE table_name = '{$table}'"));
+
                 break;
 
             case 'sqlite':
@@ -51,13 +53,15 @@ class DatabasePropertyGenerator implements IPropertyGenerator
                     return [
                         'name' => $field->name,
                         'type' => $field->type,
-                        'isNullable' => $field->notnull === 0,
+                        'isNullable' => 0 === $field->notnull,
                     ];
-                }, $connection->select("PRAGMA table_info(`$table`)"));
+                }, $connection->select("PRAGMA table_info(`{$table}`)"));
+
                 break;
 
             default:
                 throw new \Exception('Driver not supported.');
+
                 break;
         }
 
@@ -69,7 +73,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     }
 
     /**
-     * Format the given database field
+     * Format the given database field.
      *
      * @param  array $field
      * @return array
@@ -88,6 +92,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
             foreach ($typesToCheck as $databaseType) {
                 if (false !== strpos($field['type'], $databaseType)) {
                     $type = $tsType;
+
                     break;
                 }
             }
@@ -99,8 +104,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
 
         return [
             'operator' => ':',
-            'value' =>
-                $type .
+            'value' => $type .
                 ($field['isNullable'] ? ' | null' : '') .
                 ('any' === $type ? ' // NOT FOUND' : ''),
         ];

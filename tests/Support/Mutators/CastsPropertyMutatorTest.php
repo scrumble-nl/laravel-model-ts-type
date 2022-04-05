@@ -1,13 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Support\Mutators;
 
+use Tests\Models\Bar;
+use Tests\Models\Foo;
 use Illuminate\Console\Command;
 use PHPUnit\Framework\TestCase;
 use Scrumble\TypeGenerator\Support\Mutators\CastsPropertyMutator;
-use Tests\Models\Bar;
-use Tests\Models\Foo;
 
+/**
+ * @internal
+ */
 class CastsPropertyMutatorTest extends TestCase
 {
     public function test_undefined_attributes_raise_warning()

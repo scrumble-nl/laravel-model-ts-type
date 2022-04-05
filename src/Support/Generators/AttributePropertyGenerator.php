@@ -27,8 +27,8 @@ class AttributePropertyGenerator implements IPropertyGenerator
         foreach ($reflectionClass->getMethods() as $method) {
             $methodName = $method->getName();
 
-            if (array_key_exists($methodName, $appendFields) ||
-                ($notAppended = preg_match('/^get[A-Z]{1}[A-z]+Attribute$/', $methodName))
+            if (array_key_exists($methodName, $appendFields)
+                || ($notAppended = preg_match('/^get[A-Z]{1}[A-z]+Attribute$/', $methodName))
             ) {
                 $propertyDefinition[$appendFields[$methodName] ?? $this->formatAttributeName($methodName)] = [
                     'operator' => isset($notAppended) ? '?:' : ':',
@@ -41,7 +41,34 @@ class AttributePropertyGenerator implements IPropertyGenerator
     }
 
     /**
-     * Format the attibute name based on the camelCase method name
+     * Format the given mysql field.
+     *
+     * @param  string $returnType
+     * @return string
+     */
+    public function formatPhpReturnType(string $returnType): string
+    {
+        switch ($returnType) {
+            case 'string':
+                return 'string';
+
+            case 'int':
+            case 'float':
+                return 'number';
+
+            case 'bool':
+                return 'boolean';
+
+            case 'array':
+                return 'any[]';
+
+            default:
+                return 'any';
+        }
+    }
+
+    /**
+     * Format the attibute name based on the camelCase method name.
      *
      * @param  string $methodName
      * @return string
@@ -52,7 +79,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
     }
 
     /**
-     * Get the js type for the given method
+     * Get the js type for the given method.
      *
      * @param  \ReflectionMethod $method
      * @return string
@@ -88,28 +115,5 @@ class AttributePropertyGenerator implements IPropertyGenerator
         }
 
         return 'any';
-    }
-
-    /**
-     * Format the given mysql field
-     *
-     * @param  string $returnType
-     * @return string
-     */
-    public function formatPhpReturnType(string $returnType): string
-    {
-        switch ($returnType) {
-            case 'string':
-                return 'string';
-            case 'int':
-            case 'float':
-                return 'number';
-            case 'bool':
-                return 'boolean';
-            case 'array':
-                return 'any[]';
-            default:
-                return 'any';
-        }
     }
 }

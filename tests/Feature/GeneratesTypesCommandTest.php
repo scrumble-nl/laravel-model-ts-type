@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class GeneratesTypesCommandTest extends TestCase
 {
     /**
@@ -22,15 +25,15 @@ class GeneratesTypesCommandTest extends TestCase
      */
     public function test_command_absolute_path()
     {
-        $modelDir  = __DIR__.'/../Models';
-        $outputDir = __DIR__.'/../Output';
+        $modelDir = __DIR__ . '/../Models';
+        $outputDir = __DIR__ . '/../Output';
 
         // Check if output is already existing
         foreach ($this->modelList as $modelName) {
-            $outputFile = $outputDir.'/'.$modelName.'.d.ts';
+            $outputFile = $outputDir . '/' . $modelName . '.d.ts';
 
             if (file_exists($outputFile)) {
-                error_log('The output file for '.$modelName.' does already exist.');
+                error_log('The output file for ' . $modelName . ' does already exist.');
             }
         }
 
@@ -43,7 +46,7 @@ class GeneratesTypesCommandTest extends TestCase
 
         // Check if the generated files exist
         foreach ($this->modelList as $modelName) {
-            $outputFile = $outputDir.'/'.$modelName.'.d.ts';
+            $outputFile = $outputDir . '/' . $modelName . '.d.ts';
 
             $this->assertFileExists($outputFile);
         }

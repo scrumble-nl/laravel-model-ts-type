@@ -25,9 +25,9 @@ class RelationPropertyGenerator implements IPropertyGenerator
                 // FIXME: if there only is docblock available, make sure it works for unqualified names aswell
                 $returnType = $this->getReturnType($method);
 
-                if (strpos($returnType, 'Illuminate\Database\Eloquent\Relations') !== false) {
+                if (false !== strpos($returnType, 'Illuminate\Database\Eloquent\Relations')) {
                     $methodName = $method->getName();
-                    $relatedClassSegments = explode('\\', get_class($model->$methodName()->getRelated()));
+                    $relatedClassSegments = explode('\\', get_class($model->{$methodName}()->getRelated()));
 
                     // TODO: In later stage fix relations for packagized models
                     if ('App' === $relatedClassSegments[0]) {
@@ -36,7 +36,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
 
                         $propertyDefinition[$snakeCase ? snake_case($methodName) : $methodName] = [
                             'operator' => in_array($methodName, $withFields) ? ':' : '?:',
-                            'value' => $this->formatValue($relatedClass, $returnType)
+                            'value' => $this->formatValue($relatedClass, $returnType),
                         ];
                     }
                 }
@@ -47,7 +47,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
     }
 
     /**
-     * Get return type based on typing or doc block
+     * Get return type based on typing or doc block.
      *
      * @param  \ReflectionMethod $method
      * @return string
@@ -75,10 +75,10 @@ class RelationPropertyGenerator implements IPropertyGenerator
     }
 
     /**
-     * Format the value used for the types
+     * Format the value used for the types.
      *
-     * @param string $relatedClass
-     * @param string $returnType
+     * @param  string $relatedClass
+     * @param  string $returnType
      * @return string
      */
     private function formatValue(string $relatedClass, string $returnType): string

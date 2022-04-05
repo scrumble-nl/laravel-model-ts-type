@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 if (!function_exists('unify_path')) {
     /**
-     * Unify path name so it always matches
+     * Unify path name so it always matches.
      *
      * @param  string $path
      * @return string
@@ -17,11 +17,11 @@ if (!function_exists('unify_path')) {
 
 if (!function_exists('format_namespace')) {
     /**
-     * Format the given path to a namespace
+     * Format the given path to a namespace.
      *
-     * @param string $path
-     * @return string
+     * @param  string    $path
      * @throws Exception
+     * @return string
      */
     function format_namespace(string $path): string
     {
@@ -29,13 +29,14 @@ if (!function_exists('format_namespace')) {
 
         if (file_exists($path)) {
             // Read namespace out of file
-            $handle = fopen($path, "r");
+            $handle = fopen($path, 'r');
 
             if ($handle) {
                 while (($line = fgets($handle)) !== false) {
-                    if (strpos($line, 'namespace') === 0) {
+                    if (0 === strpos($line, 'namespace')) {
                         $parts = explode(' ', $line);
                         $ns = rtrim(trim($parts[1]), ';');
+
                         break;
                     }
                 }
@@ -51,7 +52,7 @@ if (!function_exists('format_namespace')) {
         }
 
         // Old way to generate a PSR-2 namespace
-        if ($ns === null) {
+        if (null === $ns) {
             if (!starts_with($path, '/')) {
                 $path = '/' . $path;
             }

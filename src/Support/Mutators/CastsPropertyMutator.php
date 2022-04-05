@@ -31,10 +31,11 @@ class CastsPropertyMutator implements IPropertyMutator
         $castFields = $castsProperty->getValue($model);
 
         foreach ($castFields as $key => $castValue) {
-            if (isset($propertyDefinition[$key]) === false) {
+            if (false === isset($propertyDefinition[$key])) {
                 $this->command->warn(
                     sprintf('Skipped property: Undefined property "%s" found in casts of model %s.', $key, get_class($model))
                 );
+
                 continue;
             }
             $propertyDefinition[$key]['value'] = $this->formatCastValue($castValue);
@@ -42,9 +43,9 @@ class CastsPropertyMutator implements IPropertyMutator
     }
 
     /**
-     * Formate the cast value
+     * Formate the cast value.
      *
-     * @param string $castValue
+     * @param  string $castValue
      * @return string
      */
     private function formatCastValue(string $castValue): string
@@ -55,13 +56,14 @@ class CastsPropertyMutator implements IPropertyMutator
             'string' => CastsConsts::STRING_TYPES,
             'number' => CastsConsts::NUMBER_TYPES,
             'any[]' => CastsConsts::ARRAY_TYPES,
-            'string /* Date */' => CastsConsts::DATE_TYPES
+            'string /* Date */' => CastsConsts::DATE_TYPES,
         ];
 
         foreach ($typesToCheck as $tsType => $typesToCheck) {
             foreach ($typesToCheck as $castType) {
                 if (false !== strpos($castValue, $castType)) {
                     $type = $tsType;
+
                     break;
                 }
             }

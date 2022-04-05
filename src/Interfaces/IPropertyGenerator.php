@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 interface IPropertyGenerator
 {
     /**
-     * Get the property definition for the given model
+     * Get the property definition for the given model.
      *
      * @param  Model $model
      * @return array

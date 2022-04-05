@@ -126,7 +126,7 @@ class GenerateTypesCommand extends Command
                 continue;
             }
 
-            $actualModel = new $fullyQualifiedName;
+            $actualModel = new $fullyQualifiedName();
 
             if ($actualModel instanceof Model) {
                 $propertyDefinition = $this->createPropertyDefinition($actualModel);

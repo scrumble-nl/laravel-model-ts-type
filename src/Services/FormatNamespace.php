@@ -7,11 +7,10 @@ use Illuminate\Support\Str;
 class FormatNamespace
 {
     /**
-     * @param $path
-     * @throws Exception
+     * @param  string  $path
      * @return string
      */
-    public function get($path)
+    public function get(string $path): string
     {
         $namespace = $this->fromFileContent($path);
 
@@ -27,10 +26,10 @@ class FormatNamespace
     }
 
     /**
-     * @param $path
+     * @param  string  $path
      * @return null|string
      */
-    protected function fromFileContent($path): ?string
+    protected function fromFileContent(string $path): ?string
     {
         $namespace = null;
 
@@ -58,10 +57,10 @@ class FormatNamespace
     }
 
     /**
-     * @param $path
-     * @return mixed
+     * @param  string  $path
+     * @return string
      */
-    protected function fromFilePath($path)
+    protected function fromFilePath(string $path): string
     {
         if (!starts_with($path, '/')) {
             $path = '/' . $path;

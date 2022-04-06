@@ -17,9 +17,9 @@ class GeneratesTypesCommandTest extends TestCase
     protected $modelList = ['bar', 'foo'];
 
     /**
-     * @return void
+     * @test
      */
-    public function test_command_absolute_path()
+    public function command_absolute_path()
     {
         $modelDir = __DIR__ . '/../Models';
         $outputDir = __DIR__ . '/../Output';

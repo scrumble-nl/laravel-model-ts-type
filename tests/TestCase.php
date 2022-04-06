@@ -42,21 +42,6 @@ class TestCase extends Orchestra
      * @param  Application $app
      * @return void
      */
-    protected function defineEnvironment($app)
-    {
-        // Setup default database to use sqlite :memory:
-        $app['config']->set('database.default', 'testing');
-        $app['config']->set('database.connections.testing', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
-        ]);
-    }
-
-    /**
-     * @param  Application $app
-     * @return void
-     */
     protected function setUpDatabase(Application $app)
     {
         $app['db']->connection()->getSchemaBuilder()->create('bar', function (Blueprint $table) {

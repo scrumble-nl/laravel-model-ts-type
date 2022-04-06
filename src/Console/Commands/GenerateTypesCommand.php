@@ -119,7 +119,7 @@ class GenerateTypesCommand extends Command
             $fullyQualifiedName = FormatNamespace::get($model);
 
             if (!in_array($fullyQualifiedName, get_declared_classes())) {
-                include $model;
+                include_once $model;
             }
 
             $reflectionClass = new \ReflectionClass($fullyQualifiedName);

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
-use Illuminate\Support\Facades\Schema;
 use PDO;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 

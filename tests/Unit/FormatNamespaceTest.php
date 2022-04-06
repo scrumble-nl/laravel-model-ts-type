@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use Exception;
-use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use Tests\TestCase;
+use Scrumble\TypeGenerator\Facades\FormatNamespace;
 
 class FormatNamespaceTest extends TestCase
 {

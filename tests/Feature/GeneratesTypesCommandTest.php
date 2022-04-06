@@ -93,8 +93,8 @@ EOD;
     }
 
     /**
-     * @param  string  $kebabCase
-     * @param  string  $commandAddon
+     * @param  string $kebabCase
+     * @param  string $commandAddon
      * @return string
      */
     protected function replaceToCamel(string $kebabCase, string $commandAddon): string
@@ -107,14 +107,17 @@ EOD;
     }
 
     /**
+     * @param  string    $addOnToCommand
+     * @param  string    $modelDir
+     * @param  string    $outputDir
      * @throws Exception
+     * @return void
      */
     protected function runCommand(
         string $addOnToCommand = '',
         string $modelDir = __DIR__ . '/../Models',
         string $outputDir = __DIR__ . '/../Output'
-    )
-    {
+    ) {
         $realPath = realpath($modelDir);
 
         if (!$realPath) {

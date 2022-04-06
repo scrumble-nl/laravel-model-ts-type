@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Console\Commands;
 
-use function config;
-use function kebab_case;
+use Exception;
 use ReflectionException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -103,7 +102,7 @@ class GenerateTypesCommand extends Command
     /**
      * Execute the console command.
      *
-     * @throws \Exception
+     * @throws Exception
      * @return void
      */
     public function handle(): void
@@ -124,7 +123,8 @@ class GenerateTypesCommand extends Command
 
             $reflectionClass = new \ReflectionClass($fullyQualifiedName);
 
-            if ($reflectionClass->isAbstract()) {
+            if ($reflectionClass->isAbstract() 
+                || $reflectionClass->isTrait()) {
                 continue;
             }
 
@@ -163,13 +163,12 @@ class GenerateTypesCommand extends Command
      * Create all different property definitions.
      *
      * @param  Model               $model
+     * @throws Exception
      * @throws ReflectionException
      * @return array
      */
     private function createPropertyDefinition(Model $model): array
     {
-        $propertyDefinition = [];
-
         $propertyDefinition = array_merge(
             $this->databaseGenerator->getPropertyDefinition($model),
             $this->relationGenerator->getPropertyDefinition($model),

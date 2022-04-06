@@ -27,6 +27,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
 
         if (!Schema::hasTable($table)) {
             error_log("Tried to get columns of '{$table}' but the table was not found in the database.");
+
             return [];
         }
 

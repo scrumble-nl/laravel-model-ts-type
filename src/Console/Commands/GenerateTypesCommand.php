@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Scrumble\TypeGenerator\Console\Commands;
 
 use Exception;
-use Illuminate\Support\Str;
 use ReflectionException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -137,7 +136,7 @@ class GenerateTypesCommand extends Command
 
             $actualModel = new $fullyQualifiedName();
 
-            if ($this->model !== null) {
+            if (null !== $this->model) {
                 if ($this->model !== $fullyQualifiedName) {
                     continue;
                 }

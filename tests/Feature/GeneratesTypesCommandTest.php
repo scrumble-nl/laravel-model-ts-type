@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use Exception;
-use Illuminate\Support\Str;
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 /**
  * @internal
@@ -20,14 +20,15 @@ class GeneratesTypesCommandTest extends TestCase
 
     /**
      * @test
+     * @param  mixed     $modelDir
+     * @param  mixed     $outputDir
      * @throws Exception
      */
     public function command_absolute_path(
         string $addOnToCommand = '',
         $modelDir = __DIR__ . '/../Models',
-        $outputDir= __DIR__ . '/../Output'
-    )
-    {
+        $outputDir = __DIR__ . '/../Output'
+    ) {
         $realPath = realpath($modelDir);
 
         if (!$realPath) {
@@ -59,8 +60,8 @@ class GeneratesTypesCommandTest extends TestCase
 
     /**
      * @test
-     * @return void
      * @throws Exception
+     * @return void
      */
     public function command_option_namespace()
     {
@@ -69,8 +70,8 @@ class GeneratesTypesCommandTest extends TestCase
 
     /**
      * @test
-     * @return void
      * @throws Exception
+     * @return void
      */
     public function command_option_no_kebab_case()
     {
@@ -79,27 +80,27 @@ class GeneratesTypesCommandTest extends TestCase
 
     /**
      * @test
-     * @return void
      * @throws Exception
+     * @return void
      */
     public function command_option_model()
     {
         $this->modelList = ['foo'];
-        $modelPath = addslashes("--model=Tests\Models\Foo");
+        $modelPath = addslashes('--model=Tests\\Models\\Foo');
 
         $this->command_absolute_path($modelPath);
     }
 
     /**
      * @test
-     * @return void
      * @throws Exception
+     * @return void
      */
     public function not_a_model()
     {
         $modelDir = __DIR__ . '/../Models';
         $tempFile = $modelDir . '/TestTrait.php';
-        $tempFileContent = <<<EOD
+        $tempFileContent = <<<'EOD'
 <?php
 
 namespace Tests\Models;
@@ -123,7 +124,7 @@ EOD;
     }
 
     /**
-     * @param  string  $kebabCase
+     * @param string $kebabCase
      * @param $commandAddon
      * @return string
      */

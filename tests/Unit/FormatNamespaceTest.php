@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit;
 
 use Exception;
 use Tests\TestCase;
 use Scrumble\TypeGenerator\Facades\FormatNamespace;
 
+/**
+ * @internal
+ */
 class FormatNamespaceTest extends TestCase
 {
-
     /**
      * @test
      * @return void
@@ -24,8 +28,8 @@ class FormatNamespaceTest extends TestCase
 
     /**
      * @test
-     * @return void
      * @throws Exception
+     * @return void
      */
     public function weird_path()
     {
@@ -39,5 +43,4 @@ class FormatNamespaceTest extends TestCase
         $namespace = FormatNamespace::get($modelPath);
         $this->assertEquals('Tests\\Models\\Bar', $namespace);
     }
-
 }

@@ -136,10 +136,8 @@ class GenerateTypesCommand extends Command
 
             $actualModel = new $fullyQualifiedName();
 
-            if (null !== $this->model) {
-                if ($this->model !== $fullyQualifiedName) {
-                    continue;
-                }
+            if (null !== $this->model && $this->model !== $fullyQualifiedName) {
+                continue;
             }
 
             if ($actualModel instanceof Model) {

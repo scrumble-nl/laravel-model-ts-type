@@ -25,37 +25,8 @@ class GeneratesTypesCommandTest extends TestCase
      * @throws Exception
      */
     public function command_absolute_path(
-        string $addOnToCommand = '',
-        string $modelDir = __DIR__ . '/../Models',
-        string $outputDir = __DIR__ . '/../Output'
     ) {
-        $realPath = realpath($modelDir);
-
-        if (!$realPath) {
-            throw new Exception('Could not found the path \'' . $modelDir . '\'', 404);
-        }
-
-        foreach ($this->modelList as $modelName) {
-            $modelName = $this->replaceToCamel($modelName, $addOnToCommand);
-            $outputFile = $outputDir . '/' . $modelName . '.d.ts';
-
-            if (file_exists($outputFile)) {
-                @unlink($outputFile);
-            }
-        }
-
-        $this->artisan("types:generate --modelDir={$modelDir} --outputDir={$outputDir} {$addOnToCommand}")
-            ->assertExitCode(0);
-
-        $this->reloadApplication();
-
-        foreach ($this->modelList as $modelName) {
-            $modelName = $this->replaceToCamel($modelName, $addOnToCommand);
-            $outputFile = $outputDir . '/' . $modelName . '.d.ts';
-
-            $this->assertFileExists($outputFile);
-            @unlink($outputFile);
-        }
+        $this->runCommand();
     }
 
     /**
@@ -65,7 +36,7 @@ class GeneratesTypesCommandTest extends TestCase
      */
     public function command_option_namespace()
     {
-        $this->command_absolute_path('--namespace=Tests\\Models');
+        $this->runCommand('--namespace=Tests\\Models');
     }
 
     /**
@@ -75,7 +46,7 @@ class GeneratesTypesCommandTest extends TestCase
      */
     public function command_option_no_kebab_case()
     {
-        $this->command_absolute_path('--noKebabCase');
+        $this->runCommand('--noKebabCase');
     }
 
     /**
@@ -88,7 +59,7 @@ class GeneratesTypesCommandTest extends TestCase
         $this->modelList = ['foo'];
         $modelPath = addslashes('--model=Tests\\Models\\Foo');
 
-        $this->command_absolute_path($modelPath);
+        $this->runCommand($modelPath);
     }
 
     /**
@@ -135,5 +106,43 @@ EOD;
         }
 
         return Str::ucfirst(Str::camel($kebabCase));
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function runCommand(
+        string $addOnToCommand = '',
+        string $modelDir = __DIR__ . '/../Models',
+        string $outputDir = __DIR__ . '/../Output'
+    )
+    {
+        $realPath = realpath($modelDir);
+
+        if (!$realPath) {
+            throw new Exception('Could not found the path \'' . $modelDir . '\'', 404);
+        }
+
+        foreach ($this->modelList as $modelName) {
+            $modelName = $this->replaceToCamel($modelName, $addOnToCommand);
+            $outputFile = $outputDir . '/' . $modelName . '.d.ts';
+
+            if (file_exists($outputFile)) {
+                @unlink($outputFile);
+            }
+        }
+
+        $this->artisan("types:generate --modelDir={$modelDir} --outputDir={$outputDir} {$addOnToCommand}")
+            ->assertExitCode(0);
+
+        $this->reloadApplication();
+
+        foreach ($this->modelList as $modelName) {
+            $modelName = $this->replaceToCamel($modelName, $addOnToCommand);
+            $outputFile = $outputDir . '/' . $modelName . '.d.ts';
+
+            $this->assertFileExists($outputFile);
+            @unlink($outputFile);
+        }
     }
 }

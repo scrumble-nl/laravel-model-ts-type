@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Facade;
 
 class FormatNamespace extends Facade
 {
-
     /**
      * @return string
      */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
+use Illuminate\Support\Facades\Schema;
 use PDO;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +24,11 @@ class DatabasePropertyGenerator implements IPropertyGenerator
             ->getConnection()
             ->getPDO()
             ->getAttribute(PDO::ATTR_DRIVER_NAME);
+
+        if (!Schema::hasTable($table)) {
+            error_log("Tried to get columns of '{$table}' but the table was not found in the database.");
+            return [];
+        }
 
         // Determine fields of table depending on the driver name
         switch ($driverName) {

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Foo extends Model
 {
     public $timestamps = false;
+
     protected $casts = [
         'total' => 'int',
         'my_list' => 'array',

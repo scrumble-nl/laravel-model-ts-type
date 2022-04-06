@@ -123,7 +123,7 @@ class GenerateTypesCommand extends Command
 
             $reflectionClass = new \ReflectionClass($fullyQualifiedName);
 
-            if ($reflectionClass->isAbstract() 
+            if ($reflectionClass->isAbstract()
                 || $reflectionClass->isTrait()) {
                 continue;
             }

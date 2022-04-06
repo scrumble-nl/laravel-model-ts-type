@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Exception;
 use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use Tests\TestCase;
 
@@ -24,10 +25,17 @@ class FormatNamespaceTest extends TestCase
     /**
      * @test
      * @return void
+     * @throws Exception
      */
-    public function relative_path()
+    public function weird_path()
     {
-        $modelPath = './Tests/Models/Bar.php';
+        $modelPath = __DIR__ . '/../Support/../Models/Bar.php';
+        $modelRealPath = realpath($modelPath);
+
+        if (!$modelRealPath) {
+            throw new Exception('Could not find the real path to \'' . $modelPath . '\'');
+        }
+
         $namespace = FormatNamespace::get($modelPath);
         $this->assertEquals('Tests\\Models\\Bar', $namespace);
     }

@@ -85,7 +85,7 @@ class GeneratesTypesCommandTest extends TestCase
     public function command_option_model()
     {
         $this->modelList = ['foo'];
-        $modelPath = addslashes("--model=\"Tests\Models\Foo\"");
+        $modelPath = addslashes("--model=Tests\Models\Foo");
 
         $this->command_absolute_path($modelPath);
     }

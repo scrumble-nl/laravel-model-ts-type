@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scrumble\TypeGenerator\Console\Commands;
 
 use Exception;
+use Illuminate\Support\Str;
 use ReflectionException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -24,7 +25,7 @@ class GenerateTypesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase}';
+    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase} {--model=}';
 
     /**
      * The console command description.
@@ -57,6 +58,11 @@ class GenerateTypesCommand extends Command
      * @var bool
      */
     private $useKebabCase;
+
+    /**
+     * @var string
+     */
+    private $model;
 
     /**
      * @var DatabasePropertyGenerator
@@ -111,6 +117,7 @@ class GenerateTypesCommand extends Command
         $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
+        $this->model = $this->option('model') ?? null;
 
         $this->getModels($this->modelDir);
 
@@ -129,6 +136,12 @@ class GenerateTypesCommand extends Command
             }
 
             $actualModel = new $fullyQualifiedName();
+
+            if ($this->model !== null) {
+                if ($this->model !== $fullyQualifiedName) {
+                    continue;
+                }
+            }
 
             if ($actualModel instanceof Model) {
                 $propertyDefinition = $this->createPropertyDefinition($actualModel);

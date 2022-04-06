@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use Exception;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -15,15 +16,18 @@ class GeneratesTypesCommandTest extends TestCase
     /**
      * @var string[]
      */
-    protected $modelList = ['bar', 'foo'];
+    protected $modelList = ['bar', 'foo', 'foo-bar'];
 
     /**
      * @test
+     * @throws Exception
      */
-    public function command_absolute_path()
+    public function command_absolute_path(
+        string $addOnToCommand = '',
+        $modelDir = __DIR__ . '/../Models',
+        $outputDir= __DIR__ . '/../Output'
+    )
     {
-        $modelDir = __DIR__ . '/../Models';
-        $outputDir = __DIR__ . '/../Output';
         $realPath = realpath($modelDir);
 
         if (!$realPath) {
@@ -31,6 +35,7 @@ class GeneratesTypesCommandTest extends TestCase
         }
 
         foreach ($this->modelList as $modelName) {
+            $modelName = $this->replaceToCamel($modelName, $addOnToCommand);
             $outputFile = $outputDir . '/' . $modelName . '.d.ts';
 
             if (file_exists($outputFile)) {
@@ -38,16 +43,51 @@ class GeneratesTypesCommandTest extends TestCase
             }
         }
 
-        $this->artisan("types:generate --modelDir={$modelDir} --outputDir={$outputDir}")
+        $this->artisan("types:generate --modelDir={$modelDir} --outputDir={$outputDir} {$addOnToCommand}")
             ->assertExitCode(0);
 
         $this->reloadApplication();
 
         foreach ($this->modelList as $modelName) {
+            $modelName = $this->replaceToCamel($modelName, $addOnToCommand);
             $outputFile = $outputDir . '/' . $modelName . '.d.ts';
 
             $this->assertFileExists($outputFile);
+            @unlink($outputFile);
         }
+    }
+
+    /**
+     * @test
+     * @return void
+     * @throws Exception
+     */
+    public function command_option_namespace()
+    {
+        $this->command_absolute_path('--namespace=Tests\\Models');
+    }
+
+    /**
+     * @test
+     * @return void
+     * @throws Exception
+     */
+    public function command_option_no_kebab_case()
+    {
+        $this->command_absolute_path('--noKebabCase');
+    }
+
+    /**
+     * @test
+     * @return void
+     * @throws Exception
+     */
+    public function command_option_model()
+    {
+        $this->modelList = ['foo'];
+        $modelPath = addslashes("--model=\"Tests\Models\Foo\"");
+
+        $this->command_absolute_path($modelPath);
     }
 
     /**
@@ -80,5 +120,19 @@ EOD;
         $this->command_absolute_path();
 
         unlink($tempFile);
+    }
+
+    /**
+     * @param  string  $kebabCase
+     * @param $commandAddon
+     * @return string
+     */
+    protected function replaceToCamel(string $kebabCase, $commandAddon): string
+    {
+        if (!Str::contains($commandAddon, '--noKebabCase')) {
+            return $kebabCase;
+        }
+
+        return Str::ucfirst(Str::camel($kebabCase));
     }
 }

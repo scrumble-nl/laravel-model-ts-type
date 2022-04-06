@@ -20,8 +20,6 @@ class GeneratesTypesCommandTest extends TestCase
 
     /**
      * @test
-     * @param  mixed     $modelDir
-     * @param  mixed     $outputDir
      * @throws Exception
      */
     public function command_absolute_path(

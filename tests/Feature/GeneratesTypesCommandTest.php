@@ -26,8 +26,8 @@ class GeneratesTypesCommandTest extends TestCase
      */
     public function command_absolute_path(
         string $addOnToCommand = '',
-        $modelDir = __DIR__ . '/../Models',
-        $outputDir = __DIR__ . '/../Output'
+        string $modelDir = __DIR__ . '/../Models',
+        string $outputDir = __DIR__ . '/../Output'
     ) {
         $realPath = realpath($modelDir);
 
@@ -124,11 +124,11 @@ EOD;
     }
 
     /**
-     * @param string $kebabCase
-     * @param $commandAddon
+     * @param  string  $kebabCase
+     * @param  string  $commandAddon
      * @return string
      */
-    protected function replaceToCamel(string $kebabCase, $commandAddon): string
+    protected function replaceToCamel(string $kebabCase, string $commandAddon): string
     {
         if (!Str::contains($commandAddon, '--noKebabCase')) {
             return $kebabCase;

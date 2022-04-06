@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Console\Commands;
 
-use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use function config;
 use function kebab_case;
 use ReflectionException;
-use function format_namespace;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
+use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use Scrumble\TypeGenerator\Exceptions\InvalidPathException;
 use Scrumble\TypeGenerator\Support\Mutators\CastsPropertyMutator;
 use Scrumble\TypeGenerator\Support\Mutators\HiddenPropertyMutator;
@@ -151,7 +150,7 @@ class GenerateTypesCommand extends Command
             foreach (new \DirectoryIterator($directoryPath) as $file) {
                 if ($file->isDir() && !$file->isDot()) {
                     $this->getModels($file->getPathname());
-                } else if (!$file->isDot()) {
+                } elseif (!$file->isDot()) {
                     $this->modelHits[] = $file->getPathname();
                 }
             }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Scrumble\TypeGenerator\Services;
 
 use Illuminate\Support\Str;
@@ -7,7 +9,7 @@ use Illuminate\Support\Str;
 class FormatNamespace
 {
     /**
-     * @param  string  $path
+     * @param  string $path
      * @return string
      */
     public function get(string $path): string
@@ -26,7 +28,7 @@ class FormatNamespace
     }
 
     /**
-     * @param  string  $path
+     * @param  string      $path
      * @return null|string
      */
     protected function fromFileContent(string $path): ?string
@@ -57,7 +59,7 @@ class FormatNamespace
     }
 
     /**
-     * @param  string  $path
+     * @param  string $path
      * @return string
      */
     protected function fromFilePath(string $path): string

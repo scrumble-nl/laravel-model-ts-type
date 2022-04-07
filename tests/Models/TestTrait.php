@@ -1,9 +1,7 @@
 <?php
 
 trait TestTrait {
-
-    public function bs() {
+    public function foo() {
         dd('test');
     }
-
 }

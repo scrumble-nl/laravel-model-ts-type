@@ -1,10 +1,15 @@
 <?php
 
-namespace Scrumble\TypeGenerator\Commands;
+declare(strict_types=1);
 
+namespace Scrumble\TypeGenerator\Console\Commands;
+
+use Exception;
+use ReflectionException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
+use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use Scrumble\TypeGenerator\Exceptions\InvalidPathException;
 use Scrumble\TypeGenerator\Support\Mutators\CastsPropertyMutator;
 use Scrumble\TypeGenerator\Support\Mutators\HiddenPropertyMutator;
@@ -19,7 +24,7 @@ class GenerateTypesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase}';
+    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase} {--model=}';
 
     /**
      * The console command description.
@@ -49,9 +54,14 @@ class GenerateTypesCommand extends Command
     private $namespace;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $useKebabCase;
+
+    /**
+     * @var string
+     */
+    private $model;
 
     /**
      * @var DatabasePropertyGenerator
@@ -86,6 +96,7 @@ class GenerateTypesCommand extends Command
     public function __construct()
     {
         parent::__construct();
+
         $this->databaseGenerator = new DatabasePropertyGenerator();
         $this->relationGenerator = new RelationPropertyGenerator();
         $this->attributeGenerator = new AttributePropertyGenerator();
@@ -96,8 +107,8 @@ class GenerateTypesCommand extends Command
     /**
      * Execute the console command.
      *
+     * @throws Exception
      * @return void
-     * @throws \Exception
      */
     public function handle(): void
     {
@@ -105,22 +116,28 @@ class GenerateTypesCommand extends Command
         $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
+        $this->model = $this->option('model') ?? null;
+
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $model) {
-            $fullyQualifiedName = format_namespace($model);
+            $fullyQualifiedName = FormatNamespace::get($model);
 
             if (!in_array($fullyQualifiedName, get_declared_classes())) {
-                include($model);
+                include_once $model;
             }
 
             $reflectionClass = new \ReflectionClass($fullyQualifiedName);
 
-            if ($reflectionClass->isAbstract()) {
+            if ($reflectionClass->isAbstract() || $reflectionClass->isTrait()) {
                 continue;
             }
 
-			$actualModel = new $fullyQualifiedName;
+            $actualModel = new $fullyQualifiedName();
+
+            if (null !== $this->model && $this->model !== $fullyQualifiedName) {
+                continue;
+            }
 
             if ($actualModel instanceof Model) {
                 $propertyDefinition = $this->createPropertyDefinition($actualModel);
@@ -130,11 +147,11 @@ class GenerateTypesCommand extends Command
     }
 
     /**
-     * Recursively get all models from the directory path
+     * Recursively get all models from the directory path.
      *
-     * @param string $directoryPath
-     * @return void
+     * @param  string               $directoryPath
      * @throws InvalidPathException
+     * @return void
      */
     private function getModels(string $directoryPath): void
     {
@@ -142,7 +159,7 @@ class GenerateTypesCommand extends Command
             foreach (new \DirectoryIterator($directoryPath) as $file) {
                 if ($file->isDir() && !$file->isDot()) {
                     $this->getModels($file->getPathname());
-                } else if (!$file->isDot()) {
+                } elseif (!$file->isDot()) {
                     $this->modelHits[] = $file->getPathname();
                 }
             }
@@ -152,15 +169,15 @@ class GenerateTypesCommand extends Command
     }
 
     /**
-     * Create all different property definitions
+     * Create all different property definitions.
      *
-     * @param Model $model
+     * @param  Model               $model
+     * @throws Exception
+     * @throws ReflectionException
      * @return array
      */
     private function createPropertyDefinition(Model $model): array
     {
-        $propertyDefinition = [];
-
         $propertyDefinition = array_merge(
             $this->databaseGenerator->getPropertyDefinition($model),
             $this->relationGenerator->getPropertyDefinition($model),
@@ -174,10 +191,11 @@ class GenerateTypesCommand extends Command
     }
 
     /**
-     * Write the given model to a TypeScript file
+     * Write the given model to a TypeScript file.
      *
-     * @param string $model
-     * @param array $propertyDefinition
+     * @param  string      $model
+     * @param  array       $propertyDefinition
+     * @param  null|string $modelNamespace
      * @return void
      */
     private function writeToTsFile(string $model, array $propertyDefinition, ?string $modelNamespace): void
@@ -192,7 +210,7 @@ class GenerateTypesCommand extends Command
             File::makeDirectory($fullPath, 0755, true);
         }
 
-		$transformedNamespace = str_replace("\\", '.', $modelNamespace);
+        $transformedNamespace = str_replace('\\', '.', $modelNamespace);
 
         $fileContents = $this->formatContents($className, $propertyDefinition, $transformedNamespace);
 
@@ -200,15 +218,16 @@ class GenerateTypesCommand extends Command
     }
 
     /**
-     * Format the contents for the TypeScript file
+     * Format the contents for the TypeScript file.
      *
-     * @param string $className
-     * @param array $propertyDefinition
+     * @param  string      $className
+     * @param  array       $propertyDefinition
+     * @param  null|string $namespace
      * @return string
      */
-    private function formatContents(string $className, array $propertyDefinition, ?string $namespace)
+    private function formatContents(string $className, array $propertyDefinition, ?string $namespace): string
     {
-        $indent = $this->namespace ? "    " : "";
+        $indent = $this->namespace ? '    ' : '';
         $baseString = '';
 
         if ($this->namespace) {
@@ -217,7 +236,7 @@ class GenerateTypesCommand extends Command
         $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
 
         foreach ($propertyDefinition as $key => $value) {
-            $baseString .= $indent . "    " . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
+            $baseString .= $indent . '    ' . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
         }
 
         if ($this->namespace) {

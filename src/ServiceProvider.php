@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator;
 
-use Scrumble\TypeGenerator\Commands\GenerateTypesCommand;
+use Scrumble\TypeGenerator\Services\FormatNamespace;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
+use Scrumble\TypeGenerator\Console\Commands\GenerateTypesCommand;
 
 class ServiceProvider extends LaravelServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
      *
-     * @var boolean
+     * @var bool
      */
     protected $defer = false;
 
@@ -38,5 +39,9 @@ class ServiceProvider extends LaravelServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/config/laravel-model-ts-type.php', 'laravel-model-ts-type');
+
+        $this->app->bind('format-namespace', function ($app) {
+            return new FormatNamespace();
+        });
     }
 }

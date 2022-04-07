@@ -10,16 +10,18 @@ composer require --dev scrumble-nl/laravel-model-ts-type
 ```
 ### Generating types
 ```
-php artisan types:generate {--modelDir=} {--outputDir=}
+php artisan types:generate {--modelDir=} {--outputDir=} {--model=} {--noKebabCase}
 ```
 Additional options:
 
-| Option         | Default value                                                                                   | Description                         |
-|--------------|:----------------------------------------------------------------------------------------:|:-------------------------------------|
-| `modelDir`      | `app/Models`                    | The root directory where the package can find all Laravel models          |
-| `outputDir`       | `resources/js/models`                  | The root directory for outputting the `.d.ts` files             |
-| `namespace`       | `false`                  | The namespace of the generated Types. Use `false` if you don't prefer to have one             |
-| `noKebabCase`       | `false`                  | Whether the file name should be formatted to kebab case             |
+| Option        |     Default value     | Description                                                                                |
+|---------------|:---------------------:|:-------------------------------------------------------------------------------------------|
+| `modelDir`    |     `app/Models`      | The root directory where the package can find all Laravel models                           |
+| `outputDir`   | `resources/js/models` | The root directory for outputting the `.d.ts` files                                        |
+| `namespace`   |        `false`        | The namespace of the generated Types. Use `false` if you don't prefer to have one          |
+| `noKebabCase` |        `false`        | Whether the file name should be formatted to kebab case                                    |
+| `model`       |        `null`         | Choose to generate a model for a specific file. For example you can use `App\Models\User`. |
+
 
 If you want to change the default values you can publish the config file and change it to you liking.
 
@@ -61,9 +63,9 @@ type Company = {
 
 ## Roadmap
 
-- [ ] Add tests (in progress)
+- [x] Add tests (in progress)
 - [ ] Generate types for packagized models
-- [ ] Create command to generate type for 1 model
+- [x] Create command to generate type for 1 model
 - [ ] Implement unqualified name for relation doc blocks
 
 ## Contributing

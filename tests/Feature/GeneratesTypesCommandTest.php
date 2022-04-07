@@ -69,27 +69,10 @@ class GeneratesTypesCommandTest extends TestCase
     {
         $modelDir = __DIR__ . '/../Models';
         $tempFile = $modelDir . '/TestTrait.php';
-        $tempFileContent = <<<'EOD'
-<?php
-
-namespace Tests\Models;
-
-trait TestTrait {
-    public function test() {
-        dd('test');
-    }
-}
-EOD;
-
-        $tempFileHandler = fopen($tempFile, 'w');
-        fwrite($tempFileHandler, $tempFileContent);
-        fclose($tempFileHandler);
 
         $this->reloadApplication();
         $this->assertFileExists($tempFile);
-        $this->command_absolute_path();
-
-        unlink($tempFile);
+        $this->runCommand();
     }
 
     /**

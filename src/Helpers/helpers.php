@@ -23,6 +23,18 @@ if (!function_exists('extractEnumName')) {
      */
     function extractEnumName(string $fullyQualifiedName): string
     {
+        return kebab_case(extractEnumShortName($fullyQualifiedName));
+    }
+}
+
+if (!function_exists('extractEnumShortName')) {
+    /**
+     * @param  string              $fullyQualifiedName
+     * @throws ReflectionException
+     * @return string
+     */
+    function extractEnumShortName(string $fullyQualifiedName): string
+    {
         $reflectionEnum = new ReflectionEnum($fullyQualifiedName);
         $shortName = $reflectionEnum->getShortName();
 
@@ -33,6 +45,6 @@ if (!function_exists('extractEnumName')) {
             return substr($shortName, 1);
         }
 
-        return kebab_case($shortName);
+        return $shortName;
     }
 }

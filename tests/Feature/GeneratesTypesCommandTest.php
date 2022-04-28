@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use Exception;
 use Tests\TestCase;
-use Illuminate\Support\Str;
 
 /**
  * @internal

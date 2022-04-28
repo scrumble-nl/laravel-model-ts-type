@@ -37,6 +37,7 @@ class EnumFormatter
     }
 
     /**
+     * @throws ReflectionException
      * @return string
      */
     public function format(): string
@@ -44,15 +45,16 @@ class EnumFormatter
         $name = $this->getName();
         $values = $this->getValues();
 
-        return "type {$name} = {$values};\n";
+        return "type {$name} = {$values};" . PHP_EOL;
     }
 
     /**
+     * @throws ReflectionException
      * @return string
      */
     public function getFileName(): string
     {
-        return kebab_case($this->getName());
+        return extractEnumName($this->fullyQualifiedName);
     }
 
     /**
@@ -76,19 +78,11 @@ class EnumFormatter
     }
 
     /**
+     * @throws ReflectionException
      * @return string
      */
     private function getName(): string
     {
-        $shortName = $this->reflectionEnum->getShortName();
-
-        $firstLetter = $shortName[0];
-        $secondLetter = $shortName[1];
-
-        if ('E' === $firstLetter && strtoupper($secondLetter) === $secondLetter) {
-            return substr($shortName, 1);
-        }
-
-        return $shortName;
+        return extractEnumShortName($this->fullyQualifiedName);
     }
 }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Support\Mutators;
 
+use Tests\Models\Bar;
+use Tests\Models\Foo;
 use Illuminate\Console\Command;
 use PHPUnit\Framework\TestCase;
 use Scrumble\TypeGenerator\Support\Mutators\CastsPropertyMutator;
-use Tests\Models\Bar;
-use Tests\Models\Foo;
 
 /**
  * @internal

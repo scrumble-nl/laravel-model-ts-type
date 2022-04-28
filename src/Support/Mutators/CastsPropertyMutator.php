@@ -76,7 +76,7 @@ class CastsPropertyMutator implements IPropertyMutator
         }
 
         if (enum_exists($castValue)) {
-            return extractEnumName($castValue);
+            return extractEnumShortName($castValue);
         }
 
         return $type;

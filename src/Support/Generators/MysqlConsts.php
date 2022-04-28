@@ -14,7 +14,7 @@ class MysqlConsts
     /**
      * @var array
      */
-    public const NUMBER_TYPES = ['bit', 'smallint', 'mediumint', 'int', 'bigint', 'decimal', 'float', 'double'];
+    public const NUMBER_TYPES = ['bit', 'smallint', 'mediumint', 'int', 'bigint', 'decimal', 'float', 'double', 'INTEGER'];
 
     /**
      * @var array

@@ -33,7 +33,7 @@ class FormatNamespaceTest extends TestCase
      */
     public function weird_path()
     {
-        $modelPath = __DIR__ . '/../Support/../Models/Bar.php';
+        $modelPath = __DIR__.'/../Unit/Support/../../Models/Bar.php';
         $modelRealPath = realpath($modelPath);
 
         if (!$modelRealPath) {

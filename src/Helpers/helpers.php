@@ -14,3 +14,25 @@ if (!function_exists('unify_path')) {
         return preg_replace('/\\\\/', '/', $path);
     }
 }
+
+if (!function_exists('extractEnumName')) {
+    /**
+     * @param  string              $fullyQualifiedName
+     * @throws ReflectionException
+     * @return string
+     */
+    function extractEnumName(string $fullyQualifiedName): string
+    {
+        $reflectionEnum = new ReflectionEnum($fullyQualifiedName);
+        $shortName = $reflectionEnum->getShortName();
+
+        $firstLetter = $shortName[0];
+        $secondLetter = $shortName[1];
+
+        if ('E' === $firstLetter && strtoupper($secondLetter) === $secondLetter) {
+            return substr($shortName, 1);
+        }
+
+        return kebab_case($shortName);
+    }
+}

@@ -2,26 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Support\Mutators;
+namespace Tests\Unit\Support\Mutators;
 
-use Tests\Models\Bar;
-use Tests\Models\Foo;
 use Illuminate\Console\Command;
 use PHPUnit\Framework\TestCase;
 use Scrumble\TypeGenerator\Support\Mutators\CastsPropertyMutator;
+use Tests\Models\Bar;
+use Tests\Models\Foo;
 
 /**
  * @internal
  */
 class CastsPropertyMutatorTest extends TestCase
 {
-    public function test_undefined_attributes_raise_warning()
+    /** @test */
+    public function undefined_attributes_raise_warning()
     {
         $command = $this->createMock(Command::class);
-        $command->expects($this->exactly(2))
+        $command->expects($this->exactly(3))
             ->method('warn')
             ->withConsecutive(
                 ['Skipped property: Undefined property "yesterday" found in casts of model Tests\\Models\\Bar.'],
+                ['Skipped property: Undefined property "test" found in casts of model Tests\\Models\\Bar.'],
                 ['Skipped property: Undefined property "my_list" found in casts of model Tests\\Models\\Foo.']
             );
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scrumble\TypeGenerator\Console\Commands;
 
 use Exception;
+use ReflectionClass;
 use ReflectionException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -13,6 +14,7 @@ use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use Scrumble\TypeGenerator\Exceptions\InvalidPathException;
 use Scrumble\TypeGenerator\Support\Mutators\CastsPropertyMutator;
 use Scrumble\TypeGenerator\Support\Mutators\HiddenPropertyMutator;
+use Scrumble\TypeGenerator\Support\TypescriptFormatters\EnumFormatter;
 use Scrumble\TypeGenerator\Support\Generators\DatabasePropertyGenerator;
 use Scrumble\TypeGenerator\Support\Generators\RelationPropertyGenerator;
 use Scrumble\TypeGenerator\Support\Generators\AttributePropertyGenerator;
@@ -34,59 +36,59 @@ class GenerateTypesCommand extends Command
     protected $description = 'Generate TypeScript types based on your models';
 
     /**
-     * @var array
+     * @var string[]
      */
-    private $modelHits = [];
+    private array $modelHits = [];
 
     /**
      * @var string
      */
-    private $modelDir;
+    private string $modelDir;
 
     /**
      * @var string
      */
-    private $outputDir;
+    private string $outputDir;
 
     /**
-     * @var string
+     * @var bool|string
      */
-    private $namespace;
+    private string|bool $namespace;
 
     /**
      * @var bool
      */
-    private $useKebabCase;
+    private bool $useKebabCase;
 
     /**
-     * @var string
+     * @var null|string
      */
-    private $model;
+    private string|null $model;
 
     /**
      * @var DatabasePropertyGenerator
      */
-    private $databaseGenerator;
+    private DatabasePropertyGenerator $databaseGenerator;
 
     /**
      * @var RelationPropertyGenerator
      */
-    private $relationGenerator;
+    private RelationPropertyGenerator $relationGenerator;
 
     /**
      * @var AttributePropertyGenerator
      */
-    private $attributeGenerator;
+    private AttributePropertyGenerator $attributeGenerator;
 
     /**
      * @var CastsPropertyMutator
      */
-    private $castsPropertyMutator;
+    private CastsPropertyMutator $castsPropertyMutator;
 
     /**
      * @var HiddenPropertyMutator
      */
-    private $hiddenPropertyMutator;
+    private HiddenPropertyMutator $hiddenPropertyMutator;
 
     /**
      * Create a new command instance.
@@ -120,30 +122,70 @@ class GenerateTypesCommand extends Command
 
         $this->getModels($this->modelDir);
 
-        foreach ($this->modelHits as $model) {
-            $fullyQualifiedName = FormatNamespace::get($model);
-
-            if (!in_array($fullyQualifiedName, get_declared_classes())) {
-                include_once $model;
-            }
-
-            $reflectionClass = new \ReflectionClass($fullyQualifiedName);
-
-            if ($reflectionClass->isAbstract() || $reflectionClass->isTrait()) {
-                continue;
-            }
-
-            $actualModel = new $fullyQualifiedName();
+        foreach ($this->modelHits as $modelPath) {
+            $fullyQualifiedName = FormatNamespace::get($modelPath);
 
             if (null !== $this->model && $this->model !== $fullyQualifiedName) {
                 continue;
             }
 
+            if (!in_array($fullyQualifiedName, get_declared_classes())) {
+                include_once $modelPath;
+            }
+
+            $reflectionClass = new ReflectionClass($fullyQualifiedName);
+
+            if ($reflectionClass->isAbstract() || $reflectionClass->isTrait()) {
+                continue;
+            }
+
+            if ($reflectionClass->isEnum()) {
+                $enumFormatter = new EnumFormatter($modelPath, $fullyQualifiedName);
+                $tsContent = $enumFormatter->format();
+
+                $this->writeToTsFile($modelPath, $tsContent, $enumFormatter->getFileName());
+
+                continue;
+            }
+
+            $actualModel = new $fullyQualifiedName();
+
             if ($actualModel instanceof Model) {
                 $propertyDefinition = $this->createPropertyDefinition($actualModel);
-                $this->writeToTsFile($model, $propertyDefinition, $reflectionClass->getNamespaceName());
+                $this->getClassName($modelPath);
+                $tsContent = $this->formatContents($this->getClassName($modelPath), $propertyDefinition, $this->transformNamespace($reflectionClass->getNamespaceName()));
+                $this->writeToTsFile($modelPath, $tsContent);
             }
         }
+    }
+
+    /**
+     * Format the contents for the TypeScript file.
+     *
+     * @param  string      $className
+     * @param  array       $propertyDefinition
+     * @param  null|string $namespace
+     * @return string
+     */
+    private function formatContents(string $className, array $propertyDefinition, ?string $namespace): string
+    {
+        $indent = $this->namespace ? '    ' : '';
+        $baseString = '';
+
+        if ($this->namespace) {
+            $baseString = 'declare namespace ' . $namespace . ' {' . PHP_EOL;
+        }
+        $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
+
+        foreach ($propertyDefinition as $key => $value) {
+            $baseString .= $indent . '    ' . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
+        }
+
+        if ($this->namespace) {
+            $baseString .= $indent . '}' . PHP_EOL;
+        }
+
+        return $baseString . '}' . PHP_EOL;
     }
 
     /**
@@ -191,58 +233,58 @@ class GenerateTypesCommand extends Command
     }
 
     /**
+     * @param  string $modelPath
+     * @return array
+     */
+    private function getLocationSegments(string $modelPath): array
+    {
+        $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($modelPath));
+
+        return explode('/', $sanitizedString);
+    }
+
+    /**
+     * @param  string $modelPath
+     * @return string
+     */
+    private function getClassName(string $modelPath): string
+    {
+        $locationSegments = $this->getLocationSegments($modelPath);
+        $modelName = str_replace('.php', '', array_pop($locationSegments));
+
+        return $this->useKebabCase ? kebab_case($modelName) : $modelName;
+    }
+
+    /**
+     * @param  null|string $modelNamespace
+     * @return string
+     */
+    private function transformNamespace(?string $modelNamespace): string
+    {
+        return str_replace('\\', '.', $modelNamespace);
+    }
+
+    /**
      * Write the given model to a TypeScript file.
      *
-     * @param  string      $model
-     * @param  array       $propertyDefinition
-     * @param  null|string $modelNamespace
+     * @param  string      $modelPath
+     * @param  string      $content
+     * @param  null|string $filename
      * @return void
      */
-    private function writeToTsFile(string $model, array $propertyDefinition, ?string $modelNamespace): void
+    private function writeToTsFile(string $modelPath, string $content, string $filename = null): void
     {
-        $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($model));
+        $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($modelPath));
         $locationSegments = explode('/', $sanitizedString);
         $modelName = str_replace('.php', '', array_pop($locationSegments));
         $className = $this->useKebabCase ? kebab_case($modelName) : $modelName;
         $fullPath = $this->outputDir . '/' . implode('/', $locationSegments);
+        $filename = $filename ?? $className;
 
         if (!File::exists($fullPath)) {
             File::makeDirectory($fullPath, 0755, true);
         }
 
-        $transformedNamespace = str_replace('\\', '.', $modelNamespace);
-
-        $fileContents = $this->formatContents($className, $propertyDefinition, $transformedNamespace);
-
-        File::put($fullPath . '/' . $className . '.d.ts', $fileContents);
-    }
-
-    /**
-     * Format the contents for the TypeScript file.
-     *
-     * @param  string      $className
-     * @param  array       $propertyDefinition
-     * @param  null|string $namespace
-     * @return string
-     */
-    private function formatContents(string $className, array $propertyDefinition, ?string $namespace): string
-    {
-        $indent = $this->namespace ? '    ' : '';
-        $baseString = '';
-
-        if ($this->namespace) {
-            $baseString = 'declare namespace ' . $namespace . ' {' . PHP_EOL;
-        }
-        $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
-
-        foreach ($propertyDefinition as $key => $value) {
-            $baseString .= $indent . '    ' . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
-        }
-
-        if ($this->namespace) {
-            $baseString .= $indent . '}' . PHP_EOL;
-        }
-
-        return $baseString . '}' . PHP_EOL;
+        File::put($fullPath . '/' . $filename . '.d.ts', $content);
     }
 }

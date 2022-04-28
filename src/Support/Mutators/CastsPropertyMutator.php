@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Mutators;
 
+use ReflectionException;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyMutator;
@@ -45,7 +46,8 @@ class CastsPropertyMutator implements IPropertyMutator
     /**
      * Formate the cast value.
      *
-     * @param  string $castValue
+     * @param  string              $castValue
+     * @throws ReflectionException
      * @return string
      */
     private function formatCastValue(string $castValue): string
@@ -71,6 +73,10 @@ class CastsPropertyMutator implements IPropertyMutator
             if ('any' !== $type) {
                 break;
             }
+        }
+
+        if (enum_exists($castValue)) {
+            return extractEnumName($castValue);
         }
 
         return $type;

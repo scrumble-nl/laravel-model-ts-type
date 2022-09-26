@@ -19,13 +19,14 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     {
         $propertyDefinition = [];
         $table = $model->getTable();
-        $connection = DB::connection($model->getConnection()->getName());
+        $connectionName = $model->getConnection()->getName();
+        $connection = DB::connection($connectionName);
         $driverName = $model
             ->getConnection()
             ->getPDO()
             ->getAttribute(PDO::ATTR_DRIVER_NAME);
 
-        if (!Schema::hasTable($table)) {
+        if (!Schema::connection($connectionName)->hasTable($table)) {
             error_log("Tried to get columns of '{$table}' but the table was not found in the database.");
 
             return [];

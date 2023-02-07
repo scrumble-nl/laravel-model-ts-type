@@ -7,6 +7,7 @@ namespace Scrumble\TypeGenerator\Console\Commands;
 use Exception;
 use ReflectionClass;
 use ReflectionException;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
@@ -176,7 +177,7 @@ class GenerateTypesCommand extends Command
             $baseString = 'declare namespace ' . $namespace . ' {' . PHP_EOL;
         }
 
-        $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
+        $baseString .= $indent . 'type ' . ucfirst(Str::camel($className)) . ' = {' . PHP_EOL;
 
         foreach ($propertyDefinition as $key => $value) {
             $baseString .= $indent . '    ' . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
@@ -253,7 +254,7 @@ class GenerateTypesCommand extends Command
         $locationSegments = $this->getLocationSegments($modelPath);
         $modelName = str_replace('.php', '', array_pop($locationSegments));
 
-        return $this->useKebabCase ? kebab_case($modelName) : $modelName;
+        return $this->useKebabCase ? Str::kebab($modelName) : $modelName;
     }
 
     /**
@@ -278,7 +279,7 @@ class GenerateTypesCommand extends Command
         $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($modelPath));
         $locationSegments = explode('/', $sanitizedString);
         $modelName = str_replace('.php', '', array_pop($locationSegments));
-        $className = $this->useKebabCase ? kebab_case($modelName) : $modelName;
+        $className = $this->useKebabCase ? Str::kebab($modelName) : $modelName;
         $fullPath = $this->outputDir . '/' . implode('/', $locationSegments);
         $filename = $filename ?? $className;
 

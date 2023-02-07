@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Str;
+
 if (!function_exists('unify_path')) {
     /**
      * Unify path name so it always matches.
@@ -23,7 +25,7 @@ if (!function_exists('extractEnumName')) {
      */
     function extractEnumName(string $fullyQualifiedName): string
     {
-        return kebab_case(extractEnumShortName($fullyQualifiedName));
+        return Str::kebab(extractEnumShortName($fullyQualifiedName));
     }
 }
 

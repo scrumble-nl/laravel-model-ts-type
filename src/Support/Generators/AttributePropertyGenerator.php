@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
@@ -21,7 +22,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
         $appendProperty->setAccessible(true);
 
         foreach ($appendProperty->getValue($model) as $attribute) {
-            $appendFields['get' . ucfirst(camel_case($attribute)) . 'Attribute'] = $attribute;
+            $appendFields['get' . ucfirst(Str::camel($attribute)) . 'Attribute'] = $attribute;
         }
 
         foreach ($reflectionClass->getMethods() as $method) {

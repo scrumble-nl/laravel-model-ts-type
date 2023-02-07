@@ -18,10 +18,11 @@ class CastsPropertyMutatorTest extends TestCase
     /** @test */
     public function undefined_attributes_raise_warning()
     {
+
         $command = $this->createMock(Command::class);
         $command->expects($this->exactly(3))
             ->method('warn')
-            ->withConsecutive(
+            ->willReturnOnConsecutiveCalls(
                 ['Skipped property: Undefined property "yesterday" found in casts of model Tests\\Models\\Bar.'],
                 ['Skipped property: Undefined property "test" found in casts of model Tests\\Models\\Bar.'],
                 ['Skipped property: Undefined property "my_list" found in casts of model Tests\\Models\\Foo.']

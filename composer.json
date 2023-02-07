@@ -1,6 +1,7 @@
 {
   "name": "scrumble-nl/laravel-model-ts-type",
   "type": "library",
+  "minimum-stability": "dev",
   "homepage": "https://github.com/scrumble-nl/laravel-model-ts-type",
   "description": "This package makes it possible to generate TypeScript types based on your models",
   "keywords": [
@@ -40,12 +41,12 @@
   "require": {
     "php": "^8.1",
     "ext-pdo": "*",
-    "laravel/framework": "^9.0",
+    "laravel/framework": "^10.0",
     "laravel/helpers": "^1.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5",
-    "orchestra/testbench": "^7.3",
+    "phpunit/phpunit": "^9.6.0 || ^10.0.1",
+    "orchestra/testbench": "^8.0",
     "friendsofphp/php-cs-fixer": "^3.0"
   },
   "replace": {

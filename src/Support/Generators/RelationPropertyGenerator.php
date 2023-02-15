@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
-use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 use ReflectionMethod;
+use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
 class RelationPropertyGenerator implements IPropertyGenerator
@@ -16,7 +17,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
     public function getPropertyDefinition(Model $model): array
     {
         $propertyDefinition = [];
-        $reflectionClass = new \ReflectionClass($model);
+        $reflectionClass = new ReflectionClass($model);
         $withProperty = $reflectionClass->getProperty('with');
         $withProperty->setAccessible(true);
         $withFields = $withProperty->getValue($model);

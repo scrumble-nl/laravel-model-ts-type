@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
-use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
 use ReflectionMethod;
+use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
 class AttributePropertyGenerator implements IPropertyGenerator
@@ -17,7 +18,7 @@ class AttributePropertyGenerator implements IPropertyGenerator
     {
         $appendFields = [];
         $propertyDefinition = [];
-        $reflectionClass = new \ReflectionClass($model);
+        $reflectionClass = new ReflectionClass($model);
         $appendProperty = $reflectionClass->getProperty('appends');
         $appendProperty->setAccessible(true);
 

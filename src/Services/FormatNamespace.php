@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Services;
 
+use Exception;
 use Illuminate\Support\Str;
 
 class FormatNamespace
 {
     /**
-     * @param  string $path
+     * @param  string    $path
+     * @throws Exception
      * @return string
      */
     public function get(string $path): string
@@ -20,11 +22,7 @@ class FormatNamespace
             $namespace = $this->fromFilePath($path);
         }
 
-        if (null !== $namespace) {
-            return $namespace;
-        }
-
-        throw new Exception("Could not make a valid namespace for path '{$path}'", 500);
+        return $namespace;
     }
 
     /**
@@ -40,7 +38,7 @@ class FormatNamespace
 
             if ($handle) {
                 while (($line = fgets($handle)) !== false) {
-                    if (0 === strpos($line, 'namespace')) {
+                    if (strpos($line, 'namespace') === 0) {
                         $parts = explode(' ', $line);
                         $namespace = rtrim(trim($parts[1]), ';');
 
@@ -70,7 +68,7 @@ class FormatNamespace
 
         $namespace = str_replace(base_path(), '', $path);
         $namespace = preg_replace('/\//', '\\', $namespace);
-        $namespace = str_replace('.php', '', $namespace);
+        $namespace = str_replace('.php', '', $namespace ?? '');
 
         return Str::ucfirst(substr($namespace, 2));
     }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scrumble\TypeGenerator\Support\Generators;
 
 use Illuminate\Database\Eloquent\Model;
+use ReflectionMethod;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
 class AttributePropertyGenerator implements IPropertyGenerator
@@ -68,25 +69,26 @@ class AttributePropertyGenerator implements IPropertyGenerator
     }
 
     /**
-     * Format the attibute name based on the camelCase method name.
+     * Format the attribute name based on the camelCase method name.
      *
      * @param  string $methodName
      * @return string
      */
     private function formatAttributeName(string $methodName): string
     {
-        return snake_case(preg_replace(['/^get/', '/Attribute$/'], '', $methodName));
+        return snake_case(preg_replace(['/^get/', '/Attribute$/'], '', $methodName) ?? '');
     }
 
     /**
      * Get the js type for the given method.
      *
-     * @param  \ReflectionMethod $method
+     * @param  ReflectionMethod $method
      * @return string
      */
-    private function getPropertyType(\ReflectionMethod $method): string
+    private function getPropertyType(ReflectionMethod $method): string
     {
         if (null !== ($returnType = $method->getReturnType())) {
+            // @phpstan-ignore-next-line
             return $this->formatPhpReturnType($returnType->getName()) . ($returnType->allowsNull() ? ' | null' : '');
         }
 

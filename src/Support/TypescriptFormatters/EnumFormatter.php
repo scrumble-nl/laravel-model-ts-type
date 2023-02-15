@@ -12,11 +12,6 @@ class EnumFormatter
     /**
      * @var string
      */
-    private string $enumPath;
-
-    /**
-     * @var string
-     */
     private string $fullyQualifiedName;
 
     /**
@@ -25,13 +20,11 @@ class EnumFormatter
     private ReflectionEnum $reflectionEnum;
 
     /**
-     * @param  string              $enumPath
      * @param  string              $fullyQualifiedName
      * @throws ReflectionException
      */
-    public function __construct(string $enumPath, string $fullyQualifiedName)
+    public function __construct(string $fullyQualifiedName)
     {
-        $this->enumPath = $enumPath;
         $this->fullyQualifiedName = $fullyQualifiedName;
         $this->reflectionEnum = new ReflectionEnum($fullyQualifiedName);
     }

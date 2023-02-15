@@ -38,6 +38,8 @@ $rules = [
     'declare_strict_types' => true,
     'php_unit_test_class_requires_covers' => false,
     'php_unit_method_casing' => ['case' => 'snake_case'],
+    'global_namespace_import' => true,
+    'yoda_style' => false,
 ];
 
 $excludes = [

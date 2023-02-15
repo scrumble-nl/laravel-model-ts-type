@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scrumble\TypeGenerator\Support\Generators;
 
 use PDO;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Eloquent\Model;
@@ -68,9 +69,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
                 break;
 
             default:
-                throw new \Exception('Driver not supported.');
-
-                break;
+                throw new Exception('Driver not supported.');
         }
 
         foreach ($fields as $field) {

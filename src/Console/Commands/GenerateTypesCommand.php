@@ -118,11 +118,13 @@ class GenerateTypesCommand extends Command
         $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
+        // @phpstan-ignore-next-line
         $this->model = $this->option('model') ?? null;
 
         $this->getModels($this->modelDir);
 
         foreach ($this->modelHits as $modelPath) {
+            /** @var class-string $fullyQualifiedName */
             $fullyQualifiedName = FormatNamespace::get($modelPath);
 
             if (null !== $this->model && $this->model !== $fullyQualifiedName) {
@@ -140,7 +142,7 @@ class GenerateTypesCommand extends Command
             }
 
             if ($reflectionClass->isEnum()) {
-                $enumFormatter = new EnumFormatter($modelPath, $fullyQualifiedName);
+                $enumFormatter = new EnumFormatter($fullyQualifiedName);
                 $tsContent = $enumFormatter->format();
 
                 $this->writeToTsFile($modelPath, $tsContent, $enumFormatter->getFileName());
@@ -262,7 +264,7 @@ class GenerateTypesCommand extends Command
      */
     private function transformNamespace(?string $modelNamespace): string
     {
-        return str_replace('\\', '.', $modelNamespace);
+        return str_replace('\\', '.', $modelNamespace ?? '');
     }
 
     /**

@@ -11,7 +11,7 @@ if (!function_exists('unify_path')) {
      */
     function unify_path(string $path): string
     {
-        return preg_replace('/\\\\/', '/', $path);
+        return preg_replace('/\\\\/', '/', $path) ?? '';
     }
 }
 

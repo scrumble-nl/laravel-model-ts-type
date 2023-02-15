@@ -6,6 +6,9 @@ namespace Scrumble\TypeGenerator\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @method string get(string $path)
+ */
 class FormatNamespace extends Facade
 {
     /**

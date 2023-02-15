@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
+use ReflectionClass;
+use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
@@ -15,7 +17,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
     public function getPropertyDefinition(Model $model): array
     {
         $propertyDefinition = [];
-        $reflectionClass = new \ReflectionClass($model);
+        $reflectionClass = new ReflectionClass($model);
         $withProperty = $reflectionClass->getProperty('with');
         $withProperty->setAccessible(true);
         $withFields = $withProperty->getValue($model);
@@ -27,6 +29,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
 
                 if (false !== strpos($returnType, 'Illuminate\Database\Eloquent\Relations')) {
                     $methodName = $method->getName();
+                    // @phpstan-ignore-next-line
                     $relatedClassSegments = explode('\\', get_class($model->{$methodName}()->getRelated()));
 
                     // TODO: In later stage fix relations for packagized models
@@ -49,12 +52,13 @@ class RelationPropertyGenerator implements IPropertyGenerator
     /**
      * Get return type based on typing or doc block.
      *
-     * @param  \ReflectionMethod $method
+     * @param  ReflectionMethod $method
      * @return string
      */
-    private function getReturnType(\ReflectionMethod $method): string
+    private function getReturnType(ReflectionMethod $method): string
     {
         if (null !== ($returnType = $method->getReturnType())) {
+            // @phpstan-ignore-next-line
             return $returnType->getName();
         }
 

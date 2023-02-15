@@ -50,3 +50,14 @@ if (!function_exists('extractEnumShortName')) {
         return $shortName;
     }
 }
+
+if (!function_exists('camel_case')) {
+    /**
+     * @param string $string
+     * @return string
+     */
+    function camel_case(string $string): string
+    {
+        return Str::camel($string);
+    }
+}

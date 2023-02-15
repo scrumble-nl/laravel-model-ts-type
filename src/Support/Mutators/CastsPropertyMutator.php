@@ -16,6 +16,9 @@ class CastsPropertyMutator implements IPropertyMutator
      */
     private $command;
 
+    /**
+     * @param Command $command
+     */
     public function __construct(Command $command)
     {
         $this->command = $command;

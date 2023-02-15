@@ -177,7 +177,7 @@ class GenerateTypesCommand extends Command
             $baseString = 'declare namespace ' . $namespace . ' {' . PHP_EOL;
         }
 
-        $baseString .= $indent . 'type ' . ucfirst(Str::camel($className)) . ' = {' . PHP_EOL;
+        $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
 
         foreach ($propertyDefinition as $key => $value) {
             $baseString .= $indent . '    ' . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;

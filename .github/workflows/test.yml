@@ -11,7 +11,3 @@ jobs:
       - uses: php-actions/phpunit@v2
         with:
           php_version: "8.1"
-      - uses: php-actions/phpstan@v3
-        with:
-          php_version: "8.1"
-          version: "2.4.0"

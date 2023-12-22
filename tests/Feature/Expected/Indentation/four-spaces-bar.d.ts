@@ -4,4 +4,4 @@ type Bar = {
     yesterday: string /* Date */;
     theme: any;
     test: TestEnum;
-}
+};

@@ -192,10 +192,12 @@ class GenerateTypesCommand extends Command
         }
 
         if ($this->namespace) {
-            $baseString .= $indent . '}' . PHP_EOL;
+            $baseString .= $indent . '};' . PHP_EOL;
+
+            return $baseString . '}' . PHP_EOL;
         }
 
-        return $baseString . '}' . PHP_EOL;
+        return $baseString . '};' . PHP_EOL;
     }
 
     /**

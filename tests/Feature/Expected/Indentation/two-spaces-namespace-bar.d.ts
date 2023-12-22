@@ -5,5 +5,5 @@ declare namespace Tests.Models {
     yesterday: string /* Date */;
     theme: any;
     test: TestEnum;
-  }
+  };
 }

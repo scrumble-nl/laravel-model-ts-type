@@ -17,7 +17,7 @@ if (!function_exists('unify_path')) {
 
 if (!function_exists('extractEnumName')) {
     /**
-     * @param  string              $fullyQualifiedName
+     * @param  class-string              $fullyQualifiedName
      * @throws ReflectionException
      * @return string
      */
@@ -29,7 +29,7 @@ if (!function_exists('extractEnumName')) {
 
 if (!function_exists('extractEnumShortName')) {
     /**
-     * @param  string              $fullyQualifiedName
+     * @param  class-string              $fullyQualifiedName
      * @throws ReflectionException
      * @return string
      */

@@ -9,3 +9,5 @@ jobs:
         with:
           php_version: "8.1"
       - uses: php-actions/phpunit@v2
+        with:
+          php_version: "8.1"

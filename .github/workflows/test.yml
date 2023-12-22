@@ -14,3 +14,5 @@ jobs:
       - uses: php-actions/phpstan@v3
         with:
           php_version: "8.1"
+          version: "2.4.0"
+

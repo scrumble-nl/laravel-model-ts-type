@@ -14,4 +14,7 @@ return [
 
     // Whether the file name should be formatted to kebab case
     'noKebabCase' => false,
+
+    // The amount of spaces used for indentation
+    'indentation_spaces' => 4,
 ];

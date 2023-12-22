@@ -21,8 +21,7 @@ class GeneratesTypesCommandTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function command_absolute_path(
-    ) {
+    public function command_absolute_path() {
         $this->runCommand();
     }
 
@@ -73,5 +72,4 @@ class GeneratesTypesCommandTest extends TestCase
         $this->assertFileExists($tempFile);
         $this->runCommand();
     }
-
 }

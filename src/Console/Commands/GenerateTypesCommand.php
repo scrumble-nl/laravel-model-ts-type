@@ -7,6 +7,7 @@ namespace Scrumble\TypeGenerator\Console\Commands;
 use Exception;
 use ReflectionClass;
 use ReflectionException;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
@@ -26,7 +27,7 @@ class GenerateTypesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase} {--model=}';
+    protected $signature = 'types:generate {--modelDir=} {--namespace=} {--outputDir=} {--noKebabCase} {--model=} {--indentationSpaces=}';
 
     /**
      * The console command description.
@@ -64,6 +65,11 @@ class GenerateTypesCommand extends Command
      * @var null|string
      */
     private string|null $model;
+
+    /**
+     * @var string
+     */
+    private string $indentation;
 
     /**
      * @var DatabasePropertyGenerator
@@ -118,6 +124,7 @@ class GenerateTypesCommand extends Command
         $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
+        $this->indentation = $this->formatIndentation();
         // @phpstan-ignore-next-line
         $this->model = $this->option('model') ?? null;
 
@@ -171,7 +178,7 @@ class GenerateTypesCommand extends Command
      */
     private function formatContents(string $className, array $propertyDefinition, ?string $namespace): string
     {
-        $indent = $this->namespace ? '    ' : '';
+        $indent = $this->namespace ? $this->indentation : '';
         $baseString = '';
 
         if ($this->namespace) {
@@ -181,7 +188,7 @@ class GenerateTypesCommand extends Command
         $baseString .= $indent . 'type ' . ucfirst(camel_case($className)) . ' = {' . PHP_EOL;
 
         foreach ($propertyDefinition as $key => $value) {
-            $baseString .= $indent . '    ' . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
+            $baseString .= $indent . $this->indentation . $key . $value['operator'] . ' ' . $value['value'] . ';' . PHP_EOL;
         }
 
         if ($this->namespace) {
@@ -289,5 +296,15 @@ class GenerateTypesCommand extends Command
         }
 
         File::put($fullPath . '/' . $filename . '.d.ts', $content);
+    }
+
+    /**
+     * @return string
+     */
+    private function formatIndentation(): string
+    {
+        $indentationSize = $this->option('indentationSpaces') ?? config('laravel-model-ts-type.indentation_spaces') ?? 4;
+
+        return str_pad(' ', (int)$indentationSize);
     }
 }

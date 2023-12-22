@@ -11,7 +11,6 @@ use ReflectionUnionType;
 use ReflectionIntersectionType;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
-use Scrumble\TypeGenerator\Exceptions\IntersectionReturnTypeNotImplementedException;
 
 class RelationPropertyGenerator implements IPropertyGenerator
 {

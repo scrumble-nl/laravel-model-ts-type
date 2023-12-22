@@ -36,4 +36,12 @@ class Bar extends Model
     {
         return '';
     }
+
+    /**
+     * @return string|int
+     */
+    public function unionDocReturn()
+    {
+        return '';
+    }
 }

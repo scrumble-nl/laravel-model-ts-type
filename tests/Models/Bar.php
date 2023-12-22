@@ -28,4 +28,20 @@ class Bar extends Model
         'theme' => 'object',
         'test' => ETestEnum::class,
     ];
+
+    /**
+     * @return string|int
+     */
+    public function unionReturn(): string|int
+    {
+        return '';
+    }
+
+    /**
+     * @return string|int
+     */
+    public function unionDocReturn()
+    {
+        return '';
+    }
 }

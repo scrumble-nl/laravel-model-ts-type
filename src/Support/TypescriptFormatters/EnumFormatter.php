@@ -10,7 +10,7 @@ use ReflectionException;
 class EnumFormatter
 {
     /**
-     * @var string
+     * @var class-string
      */
     private string $fullyQualifiedName;
 
@@ -20,7 +20,7 @@ class EnumFormatter
     private ReflectionEnum $reflectionEnum;
 
     /**
-     * @param  string              $fullyQualifiedName
+     * @param  class-string              $fullyQualifiedName
      * @throws ReflectionException
      */
     public function __construct(string $fullyQualifiedName)

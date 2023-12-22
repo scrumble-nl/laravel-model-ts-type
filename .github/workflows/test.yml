@@ -11,3 +11,7 @@ jobs:
       - uses: php-actions/phpunit@v2
         with:
           php_version: "8.1"
+      - name: Running Phpstan
+        run: ./vendor/bin/phpstan analyse
+        with:
+          php_version: "8.1"

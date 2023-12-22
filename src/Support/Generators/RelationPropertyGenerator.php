@@ -37,6 +37,11 @@ class RelationPropertyGenerator implements IPropertyGenerator
             if ($method->class === get_class($model)) {
                 // FIXME: if there only is docblock available, make sure it works for unqualified names aswell
                 $returnType = $this->getReturnType($method);
+
+                if ($returnType === null) {
+                    continue;
+                }
+
                 $relationReturn = array_first($returnType, fn ($type) => !!strpos($type, self::RELATION_TYPE));
 
                 if ($relationReturn) {
@@ -65,9 +70,9 @@ class RelationPropertyGenerator implements IPropertyGenerator
      * Get return type based on typing or doc block.
      *
      * @param ReflectionMethod $method
-     * @return array<int, string>
+     * @return null|array<int, string>
      */
-    private function getReturnType(ReflectionMethod $method): array
+    private function getReturnType(ReflectionMethod $method): ?array
     {
         if (null !== ($returnType = $method->getReturnType())) {
             if (in_array($returnType::class, self::REFLECTION_RETURN_TYPES)) {
@@ -79,7 +84,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
         $docComment = $method->getDocComment();
 
         if (false === $docComment) {
-            return [''];
+            return null;
         }
 
         $matches = [];
@@ -89,17 +94,17 @@ class RelationPropertyGenerator implements IPropertyGenerator
             return [$matches[0]];
         }
 
-        return [''];
+        return null;
     }
 
     /**
      * @param ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $returnType
-     * @return array<int, string>
+     * @return null|array<int, string>
      */
-    private function parseReflectionReturnType(ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $returnType): array
+    private function parseReflectionReturnType(ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $returnType): ?array
     {
         if ($returnType instanceof ReflectionIntersectionType) {
-            return [''];
+            return null;
         }
 
         if ($returnType instanceof ReflectionUnionType) {

@@ -89,6 +89,13 @@ class AttributePropertyGenerator implements IPropertyGenerator
     private function getPropertyType(ReflectionMethod $method): string
     {
         if (null !== ($returnType = $method->getReturnType())) {
+            if($returnType instanceof ReflectionUnionType) {
+                return collect($returnType->getTypes())->map(function($returnType) {
+                    // @phpstan-ignore-next-line
+                    return $this->formatPhpReturnType($returnType->getName()) . ($returnType->allowsNull() ? ' | null' : '');
+                })->join(' | ');
+            }
+            
             // @phpstan-ignore-next-line
             return $this->formatPhpReturnType($returnType->getName()) . ($returnType->allowsNull() ? ' | null' : '');
         }

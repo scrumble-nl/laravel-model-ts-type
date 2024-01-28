@@ -90,7 +90,6 @@ class AttributePropertyGenerator implements IPropertyGenerator
     {
         if (null !== ($returnType = $method->getReturnType())) {
             if($returnType instanceof ReflectionUnionType) {
-                $allowsNull = false;
                 $returnTypes = collect($returnType->getTypes())
                 ->map(function($returnType) {
                     // @phpstan-ignore-next-line

@@ -6,6 +6,7 @@ namespace Scrumble\TypeGenerator\Support\Generators;
 
 use ReflectionClass;
 use ReflectionMethod;
+use ReflectionUnionType;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
 
@@ -90,14 +91,13 @@ class AttributePropertyGenerator implements IPropertyGenerator
     {
         if (null !== ($returnType = $method->getReturnType())) {
             if($returnType instanceof ReflectionUnionType) {
-                $returnTypes = collect($returnType->getTypes())
-                ->map(function($returnType) {
-                    // @phpstan-ignore-next-line
-                    return $this->formatPhpReturnType($returnType->getName()) ;
-                })
-                ->join(' | ') . ($returnType->allowsNull() ? ' | null' : '');
+                return collect($returnType->getTypes())
+                    ->map(function($returnType) {
+                        return $this->formatPhpReturnType($returnType->getName()) ;
+                    })
+                    ->join(' | ') . ($returnType->allowsNull() ? ' | null' : '');
             }
-            
+
             // @phpstan-ignore-next-line
             return $this->formatPhpReturnType($returnType->getName()) . ($returnType->allowsNull() ? ' | null' : '');
         }

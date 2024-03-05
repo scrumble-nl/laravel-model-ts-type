@@ -33,8 +33,16 @@ class RelationPropertyGenerator implements IPropertyGenerator
         $withProperty->setAccessible(true);
         $withFields = $withProperty->getValue($model);
 
+        $permittedClasses = [get_class($model)];
+        foreach(class_parents($model) as $parent) {
+            if ($parent == Model::class) {
+                break;
+            }
+            $permittedClasses[] = $parent;
+        }
+
         foreach ($reflectionClass->getMethods() as $method) {
-            if ($method->class === get_class($model)) {
+            if (in_array($method->class, $permittedClasses)) {
                 // FIXME: if there only is docblock available, make sure it works for unqualified names aswell
                 $returnType = $this->getReturnType($method);
 

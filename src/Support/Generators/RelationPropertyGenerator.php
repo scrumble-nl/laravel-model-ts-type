@@ -42,7 +42,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
                     continue;
                 }
 
-                $relationReturn = array_first($returnType, fn ($type) => !!strpos($type, self::RELATION_TYPE));
+                $relationReturn = array_first($returnType, fn ($type) => str_contains($type, self::RELATION_TYPE));
 
                 if ($relationReturn) {
                     $methodName = $method->getName();

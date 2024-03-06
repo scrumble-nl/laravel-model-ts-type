@@ -35,7 +35,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
 
         $permittedClasses = [get_class($model)];
         foreach(class_parents($model) as $parent) {
-            if ($parent == Model::class) {
+            if ($parent === Model::class) {
                 break;
             }
             $permittedClasses[] = $parent;

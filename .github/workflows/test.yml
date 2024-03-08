@@ -39,3 +39,6 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit
+
+      - name: Analyze
+        run:  vendor/bin/phpstan analyse -c ./phpstan.neon

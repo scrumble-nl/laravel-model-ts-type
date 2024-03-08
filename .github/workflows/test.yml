@@ -11,7 +11,7 @@ jobs:
       matrix:
         php: [8.3, 8.2, 8.1]
         laravel: ["^10.0"]
-        dependency-version: [prefer-lowest, prefer-stable]
+        dependency-version: [prefer-stable]
         include:
           - laravel: "^10.0"
             testbench: 8.*
@@ -31,10 +31,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
           coverage: none
-
-      - name: Install dependencies (remove passport)
-        run: composer remove --dev laravel/passport --no-interaction --no-update
-        if: matrix.laravel == '^8.12'
 
       - name: Install dependencies
         run: |

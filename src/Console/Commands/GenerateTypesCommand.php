@@ -123,9 +123,8 @@ class GenerateTypesCommand extends Command
         $this->modelDir = $this->option('modelDir') ?? config('laravel-model-ts-type.model_dir');
         $this->namespace = $this->option('namespace') ?? config('laravel-model-ts-type.namespace');
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
-        $this->useKebabCase = !($this->option('noKebabCase') ?? config('laravel-model-ts-type.no_kebab_case'));
+        $this->useKebabCase = !($this->option('noKebabCase') ?: config('laravel-model-ts-type.no_kebab_case'));
         $this->indentation = $this->formatIndentation();
-        // @phpstan-ignore-next-line
         $this->model = $this->option('model') ?? null;
 
         $this->getModels($this->modelDir);
@@ -149,6 +148,7 @@ class GenerateTypesCommand extends Command
             }
 
             if ($reflectionClass->isEnum()) {
+                /** @phpstan-ignore-next-line */
                 $enumFormatter = new EnumFormatter($fullyQualifiedName);
                 $tsContent = $enumFormatter->format();
 

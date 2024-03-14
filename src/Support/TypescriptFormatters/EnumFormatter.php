@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\TypescriptFormatters;
 
+use UnitEnum;
 use ReflectionEnum;
 use ReflectionException;
+use ReflectionEnumPureCase;
+use ReflectionEnumBackedCase;
 
 class EnumFormatter
 {
     /**
-     * @var class-string
+     * @var class-string<UnitEnum>
      */
     private string $fullyQualifiedName;
 
@@ -20,7 +23,7 @@ class EnumFormatter
     private ReflectionEnum $reflectionEnum;
 
     /**
-     * @param  class-string              $fullyQualifiedName
+     * @param  class-string<UnitEnum>              $fullyQualifiedName
      * @throws ReflectionException
      */
     public function __construct(string $fullyQualifiedName)
@@ -58,6 +61,7 @@ class EnumFormatter
         $cases = $this->reflectionEnum->getCases();
 
         $values = array_map(function ($case) {
+            /** @phpstan-ignore-next-line */
             $value = $case->getValue()->value;
 
             if (is_string($value)) {

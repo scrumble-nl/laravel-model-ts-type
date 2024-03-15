@@ -65,6 +65,12 @@ class TestCase extends Orchestra
             $table->integer('total');
             $table->string('my_list');
         });
+
+        $app['db']->connection()->getSchemaBuilder()->create('cast_functions', function (Blueprint $table) {
+            $table->id();
+            $table->string('foo_id');
+            $table->string('bar_id');
+        });
     }
 
     /**

@@ -5,3 +5,4 @@ tests/Output/*
 .php-cs-fixer.cache
 .DS_Store
 composer.lock
+.phpunit.cache

@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use Exception;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
+use Illuminate\Foundation\Application;
 
 /**
  * @internal
@@ -25,6 +26,10 @@ class CastFunctionTest extends TestCase
      */
     public function command_option_model(): void
     {
+        if (starts_with(Application::VERSION, '10.')) {
+            $this->markTestSkipped();
+        }
+
         $this->deleteFiles = false;
         $modelPath = addslashes('--model=Tests\\Models\\CastFunction');
 

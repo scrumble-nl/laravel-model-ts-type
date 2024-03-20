@@ -51,6 +51,11 @@ class AttributePropertyGenerator implements IPropertyGenerator
      */
     public function formatPhpReturnType(string $returnType): string
     {
+        $relatedClassSegments = explode('\\', $returnType);
+        if ($relatedClassSegments[0] === 'App') {
+            return end($relatedClassSegments);
+        }
+
         switch ($returnType) {
             case 'string':
                 return 'string';

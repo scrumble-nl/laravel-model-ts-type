@@ -26,10 +26,7 @@ class CastsPropertyMutator implements IPropertyMutator
      */
     public function mutate(Model $model, array &$propertyDefinition): void
     {
-        $reflectionClass = new \ReflectionClass($model);
-        $castsProperty = $reflectionClass->getProperty('casts');
-        $castsProperty->setAccessible(true);
-        $castFields = $castsProperty->getValue($model);
+        $castFields = $this->getCastValues($model);
 
         foreach ($castFields as $key => $castValue) {
             if (false === isset($propertyDefinition[$key])) {
@@ -41,6 +38,20 @@ class CastsPropertyMutator implements IPropertyMutator
             }
             $propertyDefinition[$key]['value'] = $this->formatCastValue($castValue);
         }
+    }
+
+    /**
+     * @param Model $model
+     * @return array
+     * @throws ReflectionException
+     */
+    private function getCastValues(Model $model): array
+    {
+        $reflectionClass = new \ReflectionClass($model);
+        $castsProperty = $reflectionClass->getProperty('casts');
+        $castsProperty->setAccessible(true);
+
+        return $castsProperty->getValue($model);
     }
 
     /**

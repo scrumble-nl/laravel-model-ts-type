@@ -135,9 +135,9 @@ class RelationPropertyGenerator implements IPropertyGenerator
      * @param string $returnType
      * @return string
      */
-    private function formatValue(string $relatedClass, string $returnType): string
+    public function formatValue(string $relatedClass, string $returnType): string
     {
-        if (str_contains($returnType, 'Morph')) {
+        if (str_ends_with($returnType, 'MorphTo')) {
             $relatedClass = 'any';
         }
 

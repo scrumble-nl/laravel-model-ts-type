@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit;
 
-use Exception;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Scrumble\TypeGenerator\Facades\FormatNamespace;
 use Scrumble\TypeGenerator\Support\Generators\RelationPropertyGenerator;
-use Tests\Models\Foo;
 use Tests\TestCase;
 
 /**
@@ -36,7 +37,7 @@ class MorphRelationTest extends TestCase
      */
     public function can_get_type_for_morph_one(): void
     {
-        $result = $this->relationPropertyGenerator->formatValue('Morph', 'Illuminate\Database\Eloquent\Relations\MorphOne');
+        $result = $this->relationPropertyGenerator->formatValue('Morph', MorphOne::class);
 
         $this->assertEquals('Morph | null', $result);
     }
@@ -47,7 +48,7 @@ class MorphRelationTest extends TestCase
      */
     public function can_get_type_for_morph_many(): void
     {
-        $result = $this->relationPropertyGenerator->formatValue('Morph', 'Illuminate\Database\Eloquent\Relations\MorphMany');
+        $result = $this->relationPropertyGenerator->formatValue('Morph', MorphMany::class);
 
         $this->assertEquals('Morph[] | null', $result);
     }
@@ -58,7 +59,7 @@ class MorphRelationTest extends TestCase
      */
     public function returns_any_for_morph_to(): void
     {
-        $result = $this->relationPropertyGenerator->formatValue('Foo', 'Illuminate\Database\Eloquent\Relations\MorphTo');
+        $result = $this->relationPropertyGenerator->formatValue('Foo', MorphTo::class);
 
         $this->assertEquals('any | null', $result);
     }
@@ -69,7 +70,7 @@ class MorphRelationTest extends TestCase
      */
     public function returns_pivot_table_for_morph_to_many(): void
     {
-        $result = $this->relationPropertyGenerator->formatValue('Foo', 'Illuminate\Database\Eloquent\Relations\MorphToMany');
+        $result = $this->relationPropertyGenerator->formatValue('Foo', MorphToMany::class);
 
         $this->assertEquals('Foo[] | null', $result);
     }

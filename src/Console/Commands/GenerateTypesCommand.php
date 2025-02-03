@@ -281,10 +281,10 @@ class GenerateTypesCommand extends Command
      *
      * @param  string      $modelPath
      * @param  string      $content
-     * @param  null|string $filename
+     * @param  ?string     $filename
      * @return void
      */
-    private function writeToTsFile(string $modelPath, string $content, string $filename = null): void
+    private function writeToTsFile(string $modelPath, string $content, ?string $filename = null): void
     {
         $sanitizedString = str_replace(unify_path($this->modelDir) . '/', '', unify_path($modelPath));
         $locationSegments = explode('/', $sanitizedString);

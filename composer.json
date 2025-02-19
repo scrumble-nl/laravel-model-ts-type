@@ -1,71 +1,71 @@
 {
-  "name": "scrumble-nl/laravel-model-ts-type",
-  "type": "library",
-  "homepage": "https://github.com/scrumble-nl/laravel-model-ts-type",
-  "description": "This package makes it possible to generate TypeScript types based on your models",
-  "keywords": [
-    "command",
-    "generate",
-    "model",
-    "TypeScript",
-    "type"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Rico Clark",
-      "email": "rico@scrumble.nl"
+    "name": "scrumble-nl/laravel-model-ts-type",
+    "type": "library",
+    "homepage": "https://github.com/scrumble-nl/laravel-model-ts-type",
+    "description": "This package makes it possible to generate TypeScript types based on your models",
+    "keywords": [
+        "command",
+        "generate",
+        "model",
+        "TypeScript",
+        "type"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rico Clark",
+            "email": "rico@scrumble.nl"
+        },
+        {
+            "name": "Luuk de Weijer",
+            "email": "luuk@scrumble.nl"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "src/Helpers/helpers.php"
+        ],
+        "psr-4": {
+            "Scrumble\\TypeGenerator\\": "src/"
+        },
+        "classmap": [
+            "src"
+        ]
     },
-    {
-      "name": "Luuk de Weijer",
-      "email": "luuk@scrumble.nl"
-    }
-  ],
-  "autoload": {
-      "files": [
-          "src/Helpers/helpers.php"
-      ],
-    "psr-4": {"Scrumble\\TypeGenerator\\": "src/"},
-    "classmap": [
-      "src"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Tests\\": "tests/"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "classmap": []
     },
-    "classmap": [
-    ]
-  },
-  "require": {
-    "php": "^8.1",
-    "ext-pdo": "*",
-    "laravel/framework": "^10.0|^11.0",
-    "laravel/helpers": "^1.6"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^10.0",
-    "orchestra/testbench": "^8.0|^9.0",
-    "friendsofphp/php-cs-fixer": "^3.0",
-    "nunomaduro/larastan": "^2.4"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "replace": {
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Scrumble\\TypeGenerator\\ServiceProvider"
-      ],
-      "aliases": {
-        "FormatNamespace": "Scrumble\\TypeGenerator\\Facades\\FormatNamespace"
-      }
+    "require": {
+        "php": "^8.1",
+        "ext-pdo": "*",
+        "laravel/framework": "^10.0|^11.0|^12.0",
+        "laravel/helpers": "^1.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0|^11.5.3",
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "nunomaduro/larastan": "^2.4"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "replace": [],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Scrumble\\TypeGenerator\\ServiceProvider"
+            ],
+            "aliases": {
+                "FormatNamespace": "Scrumble\\TypeGenerator\\Facades\\FormatNamespace"
+            }
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ]
     }
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "@php ./vendor/bin/testbench package:discover --ansi"
-    ]
-  }
 }

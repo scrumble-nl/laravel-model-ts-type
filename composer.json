@@ -52,7 +52,7 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "replace": [],
+    "replace": {},
     "extra": {
         "laravel": {
             "providers": [

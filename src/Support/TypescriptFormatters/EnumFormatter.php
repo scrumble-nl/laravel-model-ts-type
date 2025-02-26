@@ -18,7 +18,7 @@ class EnumFormatter
     private string $fullyQualifiedName;
 
     /**
-     * @var ReflectionEnum
+     * @var ReflectionEnum<UnitEnum>
      */
     private ReflectionEnum $reflectionEnum;
 

@@ -82,8 +82,8 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     /**
      * Format the given database field.
      *
-     * @param  array $field
-     * @return array
+     * @param  array<string, mixed> $field
+     * @return array<string, string>
      */
     public function formatDatabaseType(array $field): array
     {

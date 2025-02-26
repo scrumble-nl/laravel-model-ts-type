@@ -14,7 +14,7 @@ interface IPropertyGenerator
      *
      * @param  Model     $model
      * @throws Exception
-     * @return array
+     * @return array<array-key, array<array-key, mixed>>
      */
     public function getPropertyDefinition(Model $model): array;
 }

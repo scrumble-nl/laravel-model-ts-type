@@ -172,7 +172,7 @@ class GenerateTypesCommand extends Command
      * Format the contents for the TypeScript file.
      *
      * @param  string      $className
-     * @param  array       $propertyDefinition
+     * @param  array<array-key, array<array-key, mixed>>       $propertyDefinition
      * @param  null|string $namespace
      * @return string
      */
@@ -228,7 +228,7 @@ class GenerateTypesCommand extends Command
      * @param  Model               $model
      * @throws Exception
      * @throws ReflectionException
-     * @return array
+     * @return array<array-key, array<array-key, mixed>>
      */
     private function createPropertyDefinition(Model $model): array
     {
@@ -246,7 +246,7 @@ class GenerateTypesCommand extends Command
 
     /**
      * @param  string $modelPath
-     * @return array
+     * @return array<int, string>
      */
     private function getLocationSegments(string $modelPath): array
     {
@@ -262,7 +262,7 @@ class GenerateTypesCommand extends Command
     private function getClassName(string $modelPath): string
     {
         $locationSegments = $this->getLocationSegments($modelPath);
-        $modelName = str_replace('.php', '', array_pop($locationSegments));
+        $modelName = str_replace('.php', '', array_pop($locationSegments) ?? '');
 
         return $this->useKebabCase ? kebab_case($modelName) : $modelName;
     }

@@ -1,5 +1,5 @@
 includes:
-    - ./vendor/nunomaduro/larastan/extension.neon
+    - ./vendor/larastan/larastan/extension.neon
 
 parameters:
 
@@ -11,4 +11,3 @@ parameters:
     # The level 9 is the highest level :(
     level: 8
 
-    checkMissingIterableValueType: false

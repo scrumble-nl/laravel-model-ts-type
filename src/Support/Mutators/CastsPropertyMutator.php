@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Mutators;
 
+use ReflectionClass;
 use ReflectionException;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
@@ -42,12 +43,11 @@ class CastsPropertyMutator implements IPropertyMutator
 
     /**
      * @param Model $model
-     * @return array
-     * @throws ReflectionException
+     * @return array<array-key, mixed>
      */
     private function getCastValues(Model $model): array
     {
-        $reflectionClass = new \ReflectionClass($model);
+        $reflectionClass = new ReflectionClass($model);
         $castsProperty = $reflectionClass->getProperty('casts');
         $castsProperty->setAccessible(true);
 

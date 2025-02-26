@@ -48,7 +48,7 @@
         "phpunit/phpunit": "^10.0|^11.5.3",
         "orchestra/testbench": "^8.0|^9.0|^10.0",
         "friendsofphp/php-cs-fixer": "^3.0",
-        "larastan/larastan": "^3.0"
+        "larastan/larastan": "^2.4|^3.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

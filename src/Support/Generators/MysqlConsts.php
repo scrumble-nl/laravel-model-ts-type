@@ -19,7 +19,7 @@ class MysqlConsts
     /**
      * @var array<int, string>
      */
-    public const BOOL_TYPES = ['tinyint'];
+    public const BOOL_TYPES = ['tinyint', 'boolean'];
 
     /**
      * @var array<int, string>

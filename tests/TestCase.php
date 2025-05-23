@@ -25,10 +25,7 @@ class TestCase extends Orchestra
      */
     protected bool $deleteFiles = true;
 
-    /**
-     * @return void
-     */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

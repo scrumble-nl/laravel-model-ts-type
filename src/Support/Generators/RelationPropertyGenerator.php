@@ -54,8 +54,28 @@ class RelationPropertyGenerator implements IPropertyGenerator
 
                 if ($relationReturn) {
                     $methodName = $method->getName();
-                    // @phpstan-ignore-next-line
-                    $relatedClassSegments = explode('\\', get_class($model->{$methodName}()->getRelated()));
+                    try {
+                        // Skip MorphPivot-based relations to avoid setMorphClass() errors
+                        $relation = $model->{$methodName}();
+
+                        if (method_exists($relation, 'getRelated')) {
+                            $relatedInstance = $relation->getRelated();
+
+                            // In case this is MorphPivot with a MorphTo relation (which breaks)
+                            if ($relatedInstance instanceof \Illuminate\Database\Eloquent\Relations\MorphTo) {
+                                $this->warn("Skipping morphTo relation: {$methodName} on " . get_class($model));
+                                continue;
+                            }
+
+                            // @phpstan-ignore-next-line
+                            $relatedClassSegments = explode('\\', get_class($model->{$methodName}()->getRelated()));
+                        } else {
+                            continue;
+                        }
+                    } catch (\ArgumentCountError|\Throwable $e) {
+                        // Prevent fatal crash
+                        continue;
+                    }
 
                     // TODO: In later stage fix relations for packagized models
                     if ('App' === $relatedClassSegments[0]) {

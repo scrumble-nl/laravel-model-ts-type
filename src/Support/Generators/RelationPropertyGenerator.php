@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
+use Illuminate\Support\Arr;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
@@ -50,7 +51,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
                     continue;
                 }
 
-                $relationReturn = array_first($returnType, fn ($type) => str_contains($type, self::RELATION_TYPE));
+                $relationReturn = Arr::first($returnType, fn ($type) => str_contains($type, self::RELATION_TYPE));
 
                 if ($relationReturn) {
                     $methodName = $method->getName();

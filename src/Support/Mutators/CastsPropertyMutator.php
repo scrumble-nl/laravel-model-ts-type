@@ -49,7 +49,6 @@ class CastsPropertyMutator implements IPropertyMutator
     {
         $reflectionClass = new ReflectionClass($model);
         $castsProperty = $reflectionClass->getProperty('casts');
-        $castsProperty->setAccessible(true);
 
         return $castsProperty->getValue($model);
     }

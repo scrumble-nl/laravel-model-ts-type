@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Scrumble\TypeGenerator\Support\Generators;
 
-use Illuminate\Support\Arr;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionUnionType;
+use Illuminate\Support\Arr;
 use ReflectionIntersectionType;
 use Illuminate\Database\Eloquent\Model;
 use Scrumble\TypeGenerator\Interfaces\IPropertyGenerator;
@@ -35,7 +35,7 @@ class RelationPropertyGenerator implements IPropertyGenerator
         $withFields = $withProperty->getValue($model);
 
         $permittedClasses = [get_class($model)];
-        foreach(class_parents($model) as $parent) {
+        foreach (class_parents($model) as $parent) {
             if ($parent === Model::class) {
                 break;
             }
@@ -76,16 +76,32 @@ class RelationPropertyGenerator implements IPropertyGenerator
     }
 
     /**
+     * Format the value used for the types.
+     *
+     * @param  string $relatedClass
+     * @param  string $returnType
+     * @return string
+     */
+    public function formatValue(string $relatedClass, string $returnType): string
+    {
+        if (str_ends_with($returnType, 'MorphTo')) {
+            $relatedClass = 'any';
+        }
+
+        return $relatedClass . (str_contains($returnType, 'Many') ? '[]' : '') . ' | null';
+    }
+
+    /**
      * Get return type based on typing or doc block.
      *
-     * @param ReflectionMethod $method
+     * @param  ReflectionMethod        $method
      * @return null|array<int, string>
      */
     private function getReturnType(ReflectionMethod $method): ?array
     {
         if (null !== ($returnType = $method->getReturnType())) {
             if (in_array($returnType::class, self::REFLECTION_RETURN_TYPES)) {
-                /** @phpstan-ignore-next-line: if it gets here the type is definitely correct */
+                // @phpstan-ignore-next-line: if it gets here the type is definitely correct
                 return $this->parseReflectionReturnType($returnType);
             }
         }
@@ -107,10 +123,10 @@ class RelationPropertyGenerator implements IPropertyGenerator
     }
 
     /**
-     * @param ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $returnType
+     * @param  ReflectionIntersectionType|ReflectionNamedType|ReflectionUnionType $returnType
      * @return null|array<int, string>
      */
-    private function parseReflectionReturnType(ReflectionNamedType|ReflectionUnionType|ReflectionIntersectionType $returnType): ?array
+    private function parseReflectionReturnType(ReflectionIntersectionType|ReflectionNamedType|ReflectionUnionType $returnType): ?array
     {
         if ($returnType instanceof ReflectionIntersectionType) {
             return null;
@@ -127,21 +143,5 @@ class RelationPropertyGenerator implements IPropertyGenerator
         }
 
         return [$returnType->getName()];
-    }
-
-    /**
-     * Format the value used for the types.
-     *
-     * @param string $relatedClass
-     * @param string $returnType
-     * @return string
-     */
-    public function formatValue(string $relatedClass, string $returnType): string
-    {
-        if (str_ends_with($returnType, 'MorphTo')) {
-            $relatedClass = 'any';
-        }
-
-        return $relatedClass . (str_contains($returnType, 'Many') ? '[]' : '') . ' | null';
     }
 }

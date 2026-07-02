@@ -11,13 +11,13 @@ if (!function_exists('unify_path')) {
      */
     function unify_path(string $path): string
     {
-        return preg_replace('/\\\\/', '/', $path) ?? '';
+        return preg_replace('/\\\/', '/', $path) ?? '';
     }
 }
 
 if (!function_exists('extractEnumName')) {
     /**
-     * @param  class-string<UnitEnum>              $fullyQualifiedName
+     * @param  class-string<UnitEnum> $fullyQualifiedName
      * @throws ReflectionException
      * @return string
      */
@@ -29,7 +29,7 @@ if (!function_exists('extractEnumName')) {
 
 if (!function_exists('extractEnumShortName')) {
     /**
-     * @param  class-string<UnitEnum>              $fullyQualifiedName
+     * @param  class-string<UnitEnum> $fullyQualifiedName
      * @throws ReflectionException
      * @return string
      */

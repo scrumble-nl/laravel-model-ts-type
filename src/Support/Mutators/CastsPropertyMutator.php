@@ -42,7 +42,7 @@ class CastsPropertyMutator implements IPropertyMutator
     }
 
     /**
-     * @param Model $model
+     * @param  Model                   $model
      * @return array<array-key, mixed>
      */
     private function getCastValues(Model $model): array

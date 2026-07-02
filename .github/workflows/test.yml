@@ -56,3 +56,27 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/phpunit
+
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint & Static Analysis
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.4
+          extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction
+
+      - name: Check code style
+        run: composer lint
+
+      - name: Static analysis
+        run: composer analyse

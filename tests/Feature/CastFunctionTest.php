@@ -31,7 +31,7 @@ class CastFunctionTest extends TestCase
         }
 
         $this->deleteFiles = false;
-        $modelPath = addslashes('--model=Tests\\Models\\CastFunction');
+        $modelPath = addslashes('--model=Tests\Models\CastFunction');
 
         $this->runCommand($modelPath);
 

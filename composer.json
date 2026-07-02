@@ -66,6 +66,10 @@
     "scripts": {
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"
-        ]
+        ],
+        "test": "phpunit",
+        "lint": "php-cs-fixer fix --dry-run --diff --allow-risky=yes",
+        "format": "php-cs-fixer fix --allow-risky=yes",
+        "analyse": "phpstan analyse --memory-limit=1G"
     }
 }

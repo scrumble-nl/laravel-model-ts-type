@@ -22,9 +22,9 @@ class CastsPropertyMutatorTest extends TestCase
         $command->expects($this->exactly(3))
             ->method('warn')
             ->willReturnOnConsecutiveCalls(
-                ['Skipped property: Undefined property "yesterday" found in casts of model Tests\\Models\\Bar.'],
-                ['Skipped property: Undefined property "test" found in casts of model Tests\\Models\\Bar.'],
-                ['Skipped property: Undefined property "my_list" found in casts of model Tests\\Models\\Foo.']
+                ['Skipped property: Undefined property "yesterday" found in casts of model Tests\Models\Bar.'],
+                ['Skipped property: Undefined property "test" found in casts of model Tests\Models\Bar.'],
+                ['Skipped property: Undefined property "my_list" found in casts of model Tests\Models\Foo.']
             );
 
         $mutator = new CastsPropertyMutator($command);

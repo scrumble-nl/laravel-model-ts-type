@@ -12,7 +12,7 @@ interface IPropertyGenerator
     /**
      * Get the property definition for the given model.
      *
-     * @param  Model     $model
+     * @param  Model                                     $model
      * @throws Exception
      * @return array<array-key, array<array-key, mixed>>
      */

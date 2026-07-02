@@ -82,7 +82,7 @@ class DatabasePropertyGenerator implements IPropertyGenerator
     /**
      * Format the given database field.
      *
-     * @param  array<string, mixed> $field
+     * @param  array<string, mixed>  $field
      * @return array<string, string>
      */
     public function formatDatabaseType(array $field): array
@@ -111,9 +111,9 @@ class DatabasePropertyGenerator implements IPropertyGenerator
 
         return [
             'operator' => ':',
-            'value' => $type .
-                ($field['isNullable'] ? ' | null' : '') .
-                ('any' === $type ? ' // NOT FOUND' : ''),
+            'value' => $type
+                . ($field['isNullable'] ? ' | null' : '')
+                . ('any' === $type ? ' // NOT FOUND' : ''),
         ];
     }
 }

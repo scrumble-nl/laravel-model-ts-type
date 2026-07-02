@@ -23,7 +23,7 @@ class FormatNamespaceTest extends TestCase
         $this->assertFileExists($modelFilePath);
 
         $namespace = FormatNamespace::get($modelFilePath);
-        $this->assertEquals('Tests\\Models\\Bar', $namespace);
+        $this->assertEquals('Tests\Models\Bar', $namespace);
     }
 
     /**
@@ -33,7 +33,7 @@ class FormatNamespaceTest extends TestCase
      */
     public function weird_path()
     {
-        $modelPath = __DIR__.'/../Unit/Support/../../Models/Bar.php';
+        $modelPath = __DIR__ . '/../Unit/Support/../../Models/Bar.php';
         $modelRealPath = realpath($modelPath);
 
         if (!$modelRealPath) {
@@ -41,6 +41,6 @@ class FormatNamespaceTest extends TestCase
         }
 
         $namespace = FormatNamespace::get($modelPath);
-        $this->assertEquals('Tests\\Models\\Bar', $namespace);
+        $this->assertEquals('Tests\Models\Bar', $namespace);
     }
 }

@@ -10,14 +10,14 @@ use Illuminate\Database\Eloquent\Model;
 class Bar extends Model
 {
     /**
-     * @var string
-     */
-    protected $table = 'bar';
-
-    /**
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @var string
+     */
+    protected $table = 'bar';
 
     /**
      * @var array
@@ -30,15 +30,15 @@ class Bar extends Model
     ];
 
     /**
-     * @return string|int
+     * @return int|string
      */
-    public function unionReturn(): string|int
+    public function unionReturn(): int|string
     {
         return '';
     }
 
     /**
-     * @return string|int
+     * @return int|string
      */
     public function unionDocReturn()
     {

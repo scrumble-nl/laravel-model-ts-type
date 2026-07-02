@@ -48,7 +48,7 @@ class EnumTest extends TestCase
         $this->runCommand('', __DIR__ . '/../Models/Enums');
 
         $content = File::get(__DIR__ . '/../Output/another-enum.d.ts');
-        $expected = File::get(__DIR__.'/Expected/another-enum.d.ts');
+        $expected = File::get(__DIR__ . '/Expected/another-enum.d.ts');
 
         $this->assertEquals($expected, $content);
 
@@ -59,7 +59,7 @@ class EnumTest extends TestCase
     public function models_reference_enum()
     {
         $this->modelList = ['bar'];
-        $this->runCommand('--model=Tests\\\\Models\\\\Bar');
+        $this->runCommand('--model=Tests\\\Models\\\Bar');
 
         $content = File::get(__DIR__ . '/../Output/bar.d.ts');
         $expected = File::get(__DIR__ . '/Expected/bar.d.ts');

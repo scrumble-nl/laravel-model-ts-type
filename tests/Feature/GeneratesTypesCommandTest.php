@@ -21,7 +21,8 @@ class GeneratesTypesCommandTest extends TestCase
      * @test
      * @throws Exception
      */
-    public function command_absolute_path() {
+    public function command_absolute_path()
+    {
         $this->runCommand();
     }
 
@@ -32,7 +33,7 @@ class GeneratesTypesCommandTest extends TestCase
      */
     public function command_option_namespace(): void
     {
-        $this->runCommand('--namespace=Tests\\Models');
+        $this->runCommand('--namespace=Tests\Models');
     }
 
     /**
@@ -53,7 +54,7 @@ class GeneratesTypesCommandTest extends TestCase
     public function command_option_model(): void
     {
         $this->modelList = ['foo'];
-        $modelPath = addslashes('--model=Tests\\Models\\Foo');
+        $modelPath = addslashes('--model=Tests\Models\Foo');
 
         $this->runCommand($modelPath);
     }

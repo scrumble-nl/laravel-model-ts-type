@@ -6,8 +6,9 @@ namespace Scrumble\TypeGenerator\Console\Commands;
 
 use Exception;
 use ReflectionClass;
+use DirectoryIterator;
 use ReflectionException;
-use Illuminate\Support\Str;
+use UnexpectedValueException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
@@ -54,7 +55,7 @@ class GenerateTypesCommand extends Command
     /**
      * @var bool|string
      */
-    private string|bool $namespace;
+    private bool|string $namespace;
 
     /**
      * @var bool
@@ -64,7 +65,7 @@ class GenerateTypesCommand extends Command
     /**
      * @var null|string
      */
-    private string|null $model;
+    private ?string $model;
 
     /**
      * @var string
@@ -125,7 +126,8 @@ class GenerateTypesCommand extends Command
         $this->outputDir = $this->option('outputDir') ?? config('laravel-model-ts-type.output_dir');
         $this->useKebabCase = !($this->option('noKebabCase') ?: config('laravel-model-ts-type.no_kebab_case'));
         $this->indentation = $this->formatIndentation();
-        $this->model = $this->option('model') ?? null;
+        $model = $this->option('model');
+        $this->model = is_string($model) ? $model : null;
 
         $this->getModels($this->modelDir);
 
@@ -171,9 +173,9 @@ class GenerateTypesCommand extends Command
     /**
      * Format the contents for the TypeScript file.
      *
-     * @param  string      $className
-     * @param  array<array-key, array<array-key, mixed>>       $propertyDefinition
-     * @param  null|string $namespace
+     * @param  string                                    $className
+     * @param  array<array-key, array<array-key, mixed>> $propertyDefinition
+     * @param  null|string                               $namespace
      * @return string
      */
     private function formatContents(string $className, array $propertyDefinition, ?string $namespace): string
@@ -210,14 +212,14 @@ class GenerateTypesCommand extends Command
     private function getModels(string $directoryPath): void
     {
         try {
-            foreach (new \DirectoryIterator($directoryPath) as $file) {
+            foreach (new DirectoryIterator($directoryPath) as $file) {
                 if ($file->isDir() && !$file->isDot()) {
                     $this->getModels($file->getPathname());
                 } elseif (!$file->isDot()) {
                     $this->modelHits[] = $file->getPathname();
                 }
             }
-        } catch (\UnexpectedValueException $exception) {
+        } catch (UnexpectedValueException $exception) {
             throw new InvalidPathException('Could not find the given directory');
         }
     }
@@ -225,7 +227,7 @@ class GenerateTypesCommand extends Command
     /**
      * Create all different property definitions.
      *
-     * @param  Model               $model
+     * @param  Model                                     $model
      * @throws Exception
      * @throws ReflectionException
      * @return array<array-key, array<array-key, mixed>>
@@ -245,7 +247,7 @@ class GenerateTypesCommand extends Command
     }
 
     /**
-     * @param  string $modelPath
+     * @param  string             $modelPath
      * @return array<int, string>
      */
     private function getLocationSegments(string $modelPath): array
@@ -279,9 +281,9 @@ class GenerateTypesCommand extends Command
     /**
      * Write the given model to a TypeScript file.
      *
-     * @param  string      $modelPath
-     * @param  string      $content
-     * @param  ?string     $filename
+     * @param  string  $modelPath
+     * @param  string  $content
+     * @param  ?string $filename
      * @return void
      */
     private function writeToTsFile(string $modelPath, string $content, ?string $filename = null): void
@@ -307,6 +309,6 @@ class GenerateTypesCommand extends Command
     {
         $indentationSize = $this->option('indentationSpaces') ?? config('laravel-model-ts-type.indentation_spaces') ?? 4;
 
-        return str_pad(' ', (int)$indentationSize);
+        return str_pad(' ', (int) $indentationSize);
     }
 }

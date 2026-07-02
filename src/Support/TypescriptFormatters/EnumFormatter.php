@@ -7,8 +7,6 @@ namespace Scrumble\TypeGenerator\Support\TypescriptFormatters;
 use UnitEnum;
 use ReflectionEnum;
 use ReflectionException;
-use ReflectionEnumPureCase;
-use ReflectionEnumBackedCase;
 
 class EnumFormatter
 {
@@ -23,7 +21,7 @@ class EnumFormatter
     private ReflectionEnum $reflectionEnum;
 
     /**
-     * @param  class-string<UnitEnum>              $fullyQualifiedName
+     * @param  class-string<UnitEnum> $fullyQualifiedName
      * @throws ReflectionException
      */
     public function __construct(string $fullyQualifiedName)

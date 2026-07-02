@@ -33,7 +33,7 @@ class TestCase extends Orchestra
     }
 
     /**
-     * @param $app
+     * @param           $app
      * @return string[]
      */
     protected function getPackageProviders($app): array
